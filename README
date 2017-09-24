@@ -1,0 +1,8 @@
+A Layer for creating images designed for and including the neutrino settop box software. It builds with current yocto poky release "Rocko" and probably also future releases. 
+
+Lots of information has been taken from other layers or found elsewhere in the net. It contains recipes and settings for the "Opticum AX HD51 4K UHD" Settop Box  
+
+This is published under the BSD-2-Clause License. You should find a copy of the license in your yocto/poky/meta/files/common-licenses folder
+
+	September 2017
+	Markus Volk
