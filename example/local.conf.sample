@@ -30,6 +30,8 @@ ASSUME_PROVIDED += "libsdl-native"
 CONF_VERSION = "1"
 
 
+DISTRO = "tuxbox"     
+MACHINE ?= "hd51"
 
 ### Image Settings
 
@@ -59,7 +61,7 @@ SHOUTCAST_DEV_KEY = ""
 # Put additional packages that should be packaged into your image. Separated with a whitespace. 
 IMAGE_INSTALL_append += ""
 
-# Web server from which packages and images are updated. Defaults to local folder on your cst harddrive.
+# Web server from which packages and images are updated. Defaults to local folder on your harddrive.
 IPK_FEED_SERVER = "file:////media/sda1/service/ipk"
 IMAGE_LOCATION = "file:////media/sda1/service/image/flashimage.img"
 RELEASE_TEXT_LOCATION = "file:////media/sda1/service/image/beta.txt" 
