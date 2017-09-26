@@ -8,4 +8,4 @@ SRC_URI[sha256sum] = "cb74f6f15fbc017a9b609309e0af22d2e293e800b0288b6ad9e531e81c
 
 
 PROVIDES  = "virtual/dvb-driver"
-RPROVIDES_${PN} = "virtual/dvb-driver
+RPROVIDES_${PN} = "virtual/dvb-driver"
