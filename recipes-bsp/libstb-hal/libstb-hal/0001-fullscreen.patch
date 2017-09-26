@@ -1,0 +1,41 @@
+From a83221cd9a64e4dfc7a26334029978aaa0e2613b Mon Sep 17 00:00:00 2001
+From: flk <f_l_k@t-online.de>
+Date: Tue, 18 Apr 2017 09:49:32 +0200
+Subject: [PATCH] fix
+
+Signed-off-by: flk <f_l_k@t-online.de>
+---
+ generic-pc/clutterfb.cpp | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/generic-pc/clutterfb.cpp b/generic-pc/clutterfb.cpp
+index e23d943..dffd5c2 100644
+--- a/generic-pc/clutterfb.cpp
++++ b/generic-pc/clutterfb.cpp
+@@ -316,20 +316,15 @@ void GLFbPC::render()
+ 		int yoff = 0;
+ 		mVAchanged = true;
+ 		mReInit = false;
+-#if 0
++
+ 		mX = &_mX[mFullscreen];
+ 		mY = &_mY[mFullscreen];
+-#endif
++
+ 		*mX = *mY * mOA.num / mOA.den;
+-		if (mFullscreen) {
+ 			clutter_stage_set_fullscreen(CLUTTER_STAGE(stage), TRUE);
+ 			clutter_actor_show(stage);
+ 			clutter_stage_ensure_redraw(CLUTTER_STAGE(stage));
+-		} else {
+-			clutter_stage_set_fullscreen(CLUTTER_STAGE(stage), FALSE);
+-//			*mX = *mY * mOA.num / mOA.den;
+-			clutter_actor_set_size(stage, *mX, *mY);
+-		}
++
+ 		lt_info("%s: reinit mX:%d mY:%d xoff:%d yoff:%d fs %d\n",
+ 			__func__, *mX, *mY, xoff, yoff, mFullscreen);
+ 	}
+-- 
+2.7.4
+
