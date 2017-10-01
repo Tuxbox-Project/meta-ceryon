@@ -45,7 +45,6 @@ SRC_URI = " \
 	file://blank_576.mpg \
 	file://timer-wakeup.init \
 	file://0777-video-cpp-fix-for-ffmpeg-3.3.patch \
-	file://0001-playback.cpp-avoid-redefinition-of-uint64_t-cPlaybac.patch \
 "
 
 S = "${WORKDIR}/git"
