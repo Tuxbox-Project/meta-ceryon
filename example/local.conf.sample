@@ -42,7 +42,7 @@ NEUTRINO_FLAVOUR = "neutrino-mp"
 ROOTPW = ""
 
 # Choose which plugins should be installed 
-PLUGIN_INSTALL += "msgbox tuxcom shellexec tuxmail"
+PLUGIN_INSTALL += "msgbox tuxcom shellexec input tuxmail tuxwetter"
 
 # Add Image Maintainer here
 CREATOR = "Johnny Walker"
