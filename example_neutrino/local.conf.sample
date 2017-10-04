@@ -35,6 +35,9 @@ MACHINE ?= "hd51"
 
 ### Image Settings
 
+# What image to build ?
+IMAGENAME = "neutrino-image"
+
 # Choose neutrino source. Possible values are "neutrino-hd", "neutrino-ni" or "neutrino-mp"
 NEUTRINO_FLAVOUR = "neutrino-mp"
 
