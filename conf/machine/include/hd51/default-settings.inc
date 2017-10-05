@@ -13,8 +13,8 @@ MTD_KERNEL = "mmcblk0p2"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 
-IMAGE_CLASSES += "hd-emmc_image_single"
-#IMAGE_CLASSES += "hd-emmc_image_multi"
+#IMAGE_CLASSES += "hd-emmc_image_single"
+IMAGE_CLASSES += "hd-emmc_image_multi"
 
 
 IMAGE_FSTYPES += "hd-emmc"
