@@ -38,14 +38,14 @@ MACHINE ?= "hd51"
 # What image to build ?
 IMAGENAME = "neutrino-image"
 
-# Choose neutrino source. Possible values are "neutrino-hd", "neutrino-ni" or "neutrino-mp"
-NEUTRINO_FLAVOUR = "neutrino-mp"
+# Choose neutrino source. Possible values are "mp", "tango" or "ni"
+FLAVOUR = "tango"
 
 # set initial passwort for user root. Keep empty for root:
 ROOTPW = ""
 
 # Choose which plugins should be installed 
-PLUGIN_INSTALL += "msgbox tuxcom shellexec input tuxmail tuxwetter"
+PLUGIN_INSTALL += "msgbox tuxcom shellexec input tuxwetter"
 
 # Add Image Maintainer here
 CREATOR = "Johnny Walker"
