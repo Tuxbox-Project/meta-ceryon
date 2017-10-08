@@ -65,7 +65,7 @@ EXTRA_OECONF += "\
 	--enable-maintainer-mode \
 	--disable-silent-rules \
 	--enable-shared \
-	--with-boxtype=armbox \
+	--with-boxtype=hd51 \
 "
 
 do_configure_prepend() {
