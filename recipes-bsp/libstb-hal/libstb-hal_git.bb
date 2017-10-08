@@ -40,7 +40,7 @@ PV = "0.1+git${SRCPV}"
 PACKAGES += "${PN}-bin"
 
 SRC_URI = " \
-	git://github.com/TangoCash/libstb-hal-cst-next.git;protocol=http\
+	git://github.com/TangoCash/libstb-hal-cst-next.git;protocol=https \
 	file://blank_480.mpg \
 	file://blank_576.mpg \
 	file://timer-wakeup.init \
