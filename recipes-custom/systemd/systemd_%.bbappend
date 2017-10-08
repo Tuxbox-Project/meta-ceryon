@@ -32,7 +32,6 @@ do_install_append() {
 	sed -i "s|slave|shared|" ${D}/lib/systemd/system/systemd-udevd.service 
 	install -m0644 ${WORKDIR}/etc.conf ${D}${libdir}/tmpfiles.d/etc.conf
 	rm -r ${D}${sysconfdir}/resolv-conf.systemd
-	touch ${D}${sysconfdir}/resolv.conf
 }
 
 ALTERNATIVE_TARGET[resolv-conf] = "/etc/resolv.conf"
@@ -42,5 +41,3 @@ ALTERNATIVE_PRIORITY[resolv-conf] ?= "50"
 pkg_postinst_udev-hwdb () {
 		udevadm hwdb --update
 }
-
-FILES_${PN} += "/etc/resolv.conf"
