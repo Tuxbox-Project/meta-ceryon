@@ -10,6 +10,7 @@ PROVIDES = "virtual/screengrabber"
 RPROVIDES_${PN} = "virtual/screengrabber"
 
 SRC_URI = "git://github.com/oe-alliance/aio-grab;protocol=https \
+		   file://fbshot \
 "
 
 SRCREV = "${AUTOREV}"
@@ -17,3 +18,7 @@ SRCREV = "${AUTOREV}"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig 
+
+do_install_append() {
+	install -m 755 ${WORKDIR}/fbshot ${D}${bindir}/fbshot
+}
