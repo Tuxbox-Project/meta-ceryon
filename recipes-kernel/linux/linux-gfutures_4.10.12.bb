@@ -35,6 +35,9 @@ SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;na
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://try_to_fix_OOps205.patch \
+    file://tda18250.patch \
+    file://dvb.cfg \
     "
 
 SRC_URI_append_arm = " \
