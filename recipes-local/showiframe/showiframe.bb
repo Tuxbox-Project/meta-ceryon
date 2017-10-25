@@ -8,17 +8,29 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "1.4"
 PR = "r5"
 
-SRC_URI = "file://showiframe.c"
+SRC_URI = "file://showiframe.c \
+		   file://bootlogo.service \
+"
 
 S = "${WORKDIR}"
 
-CFLAGS_append += "--hash-style=gnu"
+inherit systemd
+
+SYSTEMD_SERVICE_${PN} = "bootlogo.service"
+
 
 do_compile() {
     ${CC} -o showiframe showiframe.c
 }
 
 do_install() {
-    install -d ${D}/${bindir}/
-    install -m 0755 ${S}/showiframe ${D}/${bindir}/
+    install -d ${D}/${bindir} -d ${D}${systemd_unitdir}/system
+    install -m 0755 ${S}/showiframe ${D}/${bindir}/	
+    install -m 644 ${WORKDIR}/bootlogo.service ${D}${systemd_unitdir}/system
 }
+
+FILES_${PN}_append += "/usr \
+					   /lib \
+"
+
+INSANE_SKIP_${PN} += "ldflags"
