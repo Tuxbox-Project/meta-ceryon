@@ -82,12 +82,14 @@ IMAGE_CMD_hd-emmc_append = "\
     cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_ofgwrite.zip ${IMAGEDIR}/*; \
+    ln -sf ${IMAGE_NAME}_ofgwrite.zip ${IMAGENAME}_ofgwrite.zip; \
     rm -Rf ${IMAGEDIR}; \
     \
     mkdir -p ${IMAGEDIR}; \
     mv ${IMAGE_NAME}.emmc.img ${IMAGEDIR}/disk.img; \
     echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+    ln -sf ${IMAGE_NAME}_usb.zip ${IMAGENAME}_usb.zip; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.json; \
