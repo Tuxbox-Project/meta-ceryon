@@ -39,7 +39,7 @@ MACHINE ?= "hd51"
 IMAGENAME = "neutrino-image"
 
 # Choose neutrino source. Possible values are "mp", "tango" or "ni"
-FLAVOUR = "tango"
+FLAVOUR = "mp"
 
 # set initial passwort for user root. Keep empty for root:
 ROOTPW = ""

@@ -28,6 +28,8 @@ DEPENDS = "\
 	freetype \
 "
 
+include ${FLAVOUR}.inc
+
 # on coolstream, the same is provided by cs-drivers pkg (libcoolstream)
 PROVIDES = "virtual/libstb-hal"
 RPROVIDES_${PN} = "virtual/libstb-hal"
@@ -39,12 +41,10 @@ PV = "0.1+git${SRCPV}"
 # libstb-hal-bin package for testing binaries etc.
 PACKAGES += "${PN}-bin"
 
-SRC_URI = " \
-	git://github.com/TangoCash/libstb-hal-cst-next.git;protocol=https \
+SRC_URI_append = " \
 	file://blank_480.mpg \
 	file://blank_576.mpg \
 	file://timer-wakeup.init \
-	file://0777-video-cpp-fix-for-ffmpeg-3.3.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -65,7 +65,6 @@ EXTRA_OECONF += "\
 	--enable-maintainer-mode \
 	--disable-silent-rules \
 	--enable-shared \
-	--with-boxtype=hd51 \
 "
 
 do_configure_prepend() {
