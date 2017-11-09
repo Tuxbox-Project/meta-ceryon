@@ -7,7 +7,7 @@ COMPATIBLE_MACHINE = "hd+|vs+|bre2ze4k"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR_append = ".1"
 
 PROVIDES  = "virtual/kernel"
 RPROVIDES_${PN} = "virtual/kernel"
@@ -38,6 +38,7 @@ SRC_URI_append_arm = " \
 	file://try_to_fix_OOps205.patch \
     file://tda18250.patch \
     file://dvb.cfg \
+    file://export_pmpoweroffprepare.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
