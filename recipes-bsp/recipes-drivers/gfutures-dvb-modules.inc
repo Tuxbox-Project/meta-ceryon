@@ -1,11 +1,14 @@
 DESCRIPTION = "Hardware drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
+LICENSE = "proprietary"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/license;md5=17a6b3d5436a55985b200c725761907a"
 
 PV = "${KV}+${SRCDATE}"
 
-SRC_URI = "http://downloads.mutant-digital.net/${MACHINE}/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "http://downloads.mutant-digital.net/${MACHINE}/${MACHINE}-drivers-${KV}-${SRCDATE}.zip \
+	   file://license \
+"
 
 S = "${WORKDIR}"
 
