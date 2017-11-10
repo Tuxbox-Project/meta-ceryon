@@ -91,7 +91,3 @@ FILES_${PN} = "\
 
 FILES_${PN}-dev += "${includedir}"
 
-pkg_postinst_${PN} () {
-	# after updating libstb-hal, neutrino should be restarted.
-	touch /tmp/.restart
-}
