@@ -20,5 +20,7 @@ S = "${WORKDIR}/git"
 inherit autotools pkgconfig 
 
 do_install_append() {
+	install -d ${D}${base_bindir}
 	install -m 755 ${WORKDIR}/fbshot ${D}${bindir}/fbshot
+	ln -sf /usr/bin/grab ${D}${base_bindir}/grab
 }
