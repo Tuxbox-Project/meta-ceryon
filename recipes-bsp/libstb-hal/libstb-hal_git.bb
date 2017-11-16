@@ -53,8 +53,7 @@ S = "${WORKDIR}/git"
 # but I want it to build inside the source for various reasons :-)
 inherit autotools pkgconfig
 
-
-LDFLAGS += " -Wl,-rpath-link,${STAGING_LIBDIR} -L${STAGING_LIBDIR} -lrt"
+LDFLAGS += " -Wl,-rpath-link,${STAGING_LIBDIR} -L${STAGING_LIBDIR} -lrt -lavformat -lavcodec -lavutil"
 
 CXXFLAGS_append += "-I${STAGING_INCDIR}/gstreamer-1.0 \
 					-I${STAGING_INCDIR}/glib-2.0 \
