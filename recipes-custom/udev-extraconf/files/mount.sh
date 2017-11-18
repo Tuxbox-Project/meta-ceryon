@@ -79,7 +79,7 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 	if [ -x /usr/bin/mdev_helper ]; then
           	/usr/bin/mdev_helper
 	fi
-
+	echo 1 > /proc/stb/lcd/symbol_usb
 fi
 
 
@@ -96,4 +96,5 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	# Remove empty directories from auto-mounter
 	name="`basename "$DEVNAME"`"
 	test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
+	echo 0 > /proc/stb/lcd/symbol_usb
 fi
