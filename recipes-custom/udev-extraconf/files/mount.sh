@@ -17,7 +17,7 @@ do
 	fi
 done
 
-automount() {	
+automount() {
 	name="`basename "$DEVNAME"`"
 
 	! test -d "/media/$name" && mkdir -p "/media/$name"
@@ -26,7 +26,7 @@ automount() {
 	then
 		MOUNT="$MOUNT -o silent"
 	fi
-	
+
 	# If filesystem type is vfat, change the ownership group to 'disk', and
 	# grant it with  w/r/x permissions.
 	case $ID_FS_TYPE in
@@ -47,7 +47,7 @@ automount() {
 		touch "/tmp/.automount-$name"
 	fi
 }
-	
+
 rm_dir() {
 	# We do not want to rm -r populated directories
 	if test "`find "$1" | wc -l | tr -d " "`" -lt 2 -a -d "$1"
@@ -68,7 +68,7 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 	elif [ -x $MOUNT ]; then
     		$MOUNT $DEVNAME 2> /dev/null
 	fi
-	
+
 	# If the device isn't mounted at this point, it isn't
 	# configured in fstab (note the root filesystem can show up as
 	# /dev/root in /proc/mounts, so check the device number too)
@@ -92,9 +92,16 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	if [ -x /usr/bin/mdev_helper ]; then
           	/usr/bin/mdev_helper
 	fi
-	
+
 	# Remove empty directories from auto-mounter
 	name="`basename "$DEVNAME"`"
 	test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
-	echo 0 > /proc/stb/lcd/symbol_usb
+        for i in /sys/class/block/sd[a-z]/device; do
+                if readlink -f $i | grep usb; then
+                        usb_present="1"
+                fi
+        done
+        if [ -z ${usb_present+x} ]; then
+                echo 0 > /proc/stb/lcd/symbol_usb
+        fi
 fi
