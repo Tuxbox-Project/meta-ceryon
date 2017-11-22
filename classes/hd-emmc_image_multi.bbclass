@@ -81,8 +81,8 @@ IMAGE_CMD_hd-emmc_append = "\
     bzip2 -f ${IMAGEDIR}/rootfs.tar; \
     cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
-    zip ${IMAGE_NAME}_Flavour_${FLAVOUR}_ofgwrite.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_Flavour_${FLAVOUR}_ofgwrite.zip ${IMAGENAME}_ofgwrite.zip; \
+    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGEDIR}/*; \
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGENAME}_ofgwrite.zip; \
     rm -Rf ${IMAGEDIR}; \
     \
     mkdir -p ${IMAGEDIR}; \
