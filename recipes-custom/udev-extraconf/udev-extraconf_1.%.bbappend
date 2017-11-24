@@ -5,3 +5,8 @@ SRC_URI_append = " \
        file://localextra.rules \
        file://mount.blacklist \
 "
+
+do_install_append() {
+	install -m 0644 ${WORKDIR}/mount.blacklist ${D}${sysconfdir}/udev/mount.blacklist.d
+	rm ${D}/udev/mount.blacklist
+}
