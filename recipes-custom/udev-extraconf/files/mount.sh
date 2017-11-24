@@ -19,7 +19,8 @@ done
 
 automount() {
 	name="`basename "$DEVNAME"`"
-
+	echo $ID_BUS | grep ata && name="`basename "HDD"`"
+	echo $ID_BUS | grep usb && name="`basename "$ID_FS_UUID"`"
 	! test -d "/media/$name" && mkdir -p "/media/$name"
 	# Silent util-linux's version of mounting auto
 	if [ "x`readlink $MOUNT`" = "x/bin/mount.util-linux" ] ;
@@ -59,14 +60,16 @@ rm_dir() {
 }
 
 # No ID_FS_TYPE for cdrom device, yet it should be mounted
-name="`basename "$DEVNAME"`"
+        name="`basename "$DEVNAME"`"
+        echo $ID_BUS | grep ata && name="`basename "HDD"`"
+        echo $ID_BUS | grep usb && name="`basename "$ID_FS_UUID"`"
 [ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
 
 if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
 	if [ -x "$PMOUNT" ]; then
 		$PMOUNT $DEVNAME 2> /dev/null
 	elif [ -x $MOUNT ]; then
-    		$MOUNT $DEVNAME 2> /dev/null
+    		$MOUNT $DEVNAE 2> /dev/null
 	fi
 
 	# If the device isn't mounted at this point, it isn't
@@ -94,7 +97,9 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	fi
 
 	# Remove empty directories from auto-mounter
-	name="`basename "$DEVNAME"`"
+        name="`basename "$DEVNAME"`"
+        echo $ID_BUS | grep ata && name="`basename "HDD"`"
+        echo $ID_BUS | grep usb && name="`basename "$ID_FS_UUID"`"
 	test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
 	readlink -f /sys/class/block/sd[a-z]/device | grep usb && usb_present='1'
 	[ -z ${usb_present+x} ] && echo 0 > /proc/stb/lcd/symbol_usb
