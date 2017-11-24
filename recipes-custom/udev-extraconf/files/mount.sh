@@ -69,7 +69,7 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 	if [ -x "$PMOUNT" ]; then
 		$PMOUNT $DEVNAME 2> /dev/null
 	elif [ -x $MOUNT ]; then
-    		$MOUNT $DEVNAE 2> /dev/null
+    		$MOUNT $DEVNAME 2> /dev/null
 	fi
 
 	# If the device isn't mounted at this point, it isn't
