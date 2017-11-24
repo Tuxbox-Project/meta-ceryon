@@ -96,12 +96,6 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	# Remove empty directories from auto-mounter
 	name="`basename "$DEVNAME"`"
 	test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
-        for i in /sys/class/block/sd[a-z]/device; do
-                if readlink -f $i | grep usb; then
-                        usb_present="1"
-                fi
-        done
-        if [ -z ${usb_present+x} ]; then
-                echo 0 > /proc/stb/lcd/symbol_usb
-        fi
+	readlink -f /sys/class/block/sd[a-z]/device | grep usb && usb_present='1'
+	[ -z ${usb_present+x} ] && echo 0 > /proc/stb/lcd/symbol_usb
 fi
