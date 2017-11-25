@@ -19,8 +19,14 @@ done
 
 automount() {
 	name="`basename "$DEVNAME"`"
-	echo $ID_BUS | grep ata && name="`basename "HDD"`"
-	echo $ID_BUS | grep usb && name="`basename "$ID_FS_UUID"`"
+	echo $ID_BUS | grep ata 2> /dev/null && name="HDD"
+        if echo $ID_BUS | grep usb 2> /dev/null; then
+                if [ -n "${ID_FS_LABEL+x}" ]; then
+			name="$ID_FS_LABEL"
+                else
+			name="$ID_FS_UUID"
+                fi
+        fi
 	! test -d "/media/$name" && mkdir -p "/media/$name"
 	# Silent util-linux's version of mounting auto
 	if [ "x`readlink $MOUNT`" = "x/bin/mount.util-linux" ] ;
@@ -60,10 +66,16 @@ rm_dir() {
 }
 
 # No ID_FS_TYPE for cdrom device, yet it should be mounted
+	[ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
         name="`basename "$DEVNAME"`"
-        echo $ID_BUS | grep ata && name="`basename "HDD"`"
-        echo $ID_BUS | grep usb && name="`basename "$ID_FS_UUID"`"
-[ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
+	echo $ID_BUS | grep ata 2> /dev/null && name="HDD"
+	if echo $ID_BUS | grep usb 2> /dev/null; then
+		if [ -n "${ID_FS_LABEL+x}" ]; then
+			name="$ID_FS_LABEL"
+		else
+			name="$ID_FS_UUID"
+		fi
+	fi
 
 if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
 	if [ -x "$PMOUNT" ]; then
@@ -86,7 +98,7 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 fi
 
 
-if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [ -n "$DEVNAME" ]; then
+if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ]; then
 	for mnt in `cat /proc/mounts | grep "$DEVNAME" | cut -f 2 -d " " `
 	do
 		$UMOUNT $mnt
@@ -97,10 +109,8 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	fi
 
 	# Remove empty directories from auto-mounter
-        name="`basename "$DEVNAME"`"
-        echo $ID_BUS | grep ata && name="`basename "HDD"`"
-        echo $ID_BUS | grep usb && name="`basename "$ID_FS_UUID"`"
 	test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
-	readlink -f /sys/class/block/sd[a-z]/device | grep usb && usb_present='1'
+	readlink -f /sys/class/block/sd[a-z]/device | grep usb 2> /dev/null && usb_present="1"
 	[ -z ${usb_present+x} ] && echo 0 > /proc/stb/lcd/symbol_usb
 fi
+
