@@ -1,9 +1,0 @@
-[Unit]
-Description=Expand your memory
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c "/usr/bin/createswap.sh"
-
-[Install]
-WantedBy=multi-user.target
