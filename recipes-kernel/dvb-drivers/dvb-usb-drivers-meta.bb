@@ -2,7 +2,7 @@ DESCRIPTION = "meta file for USB DVB drivers"
 
 require dvb-usb-drivers-meta.inc
 
-DEPENDS = "\
+RDEPENDS_${PN} = "\
 	enigma2-plugin-drivers-atsc-usb-hauppauge \
 	enigma2-plugin-drivers-atsc-usb-hauppauge-950q \
 	enigma2-plugin-drivers-atsc-usb-hauppauge-955q \
