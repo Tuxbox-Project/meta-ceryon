@@ -76,9 +76,8 @@ IMAGE_CMD_hd-emmc () {
 IMAGE_CMD_hd-emmc_append = "\
     cd ${DEPLOY_DIR_IMAGE}; \
     mkdir -p ${IMAGEDIR}; \
-    tar -cvf rootfs.tar -C ${IMAGE_ROOTFS} .; \
-    mv rootfs.tar ${IMAGEDIR}/rootfs.tar; \
-    bzip2 -f ${IMAGEDIR}/rootfs.tar; \
+    bzip2 -f ${IMGDEPLOYDIR}/${IMAGE_LINK}; \
+    mv ${IMGDEPLOYDIR}/${IMAGE_LINK}.bz2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGEDIR}/*; \
@@ -88,8 +87,8 @@ IMAGE_CMD_hd-emmc_append = "\
     mkdir -p ${IMAGEDIR}; \
     mv ${IMAGE_NAME}.emmc.img ${IMAGEDIR}/disk.img; \
     echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_usb.zip ${IMAGENAME}_usb.zip; \
+    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGEDIR}/*; \
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGENAME}_usb.zip; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.json; \
