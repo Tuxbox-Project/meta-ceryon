@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_hd-emmc = "ext4"
+IMAGE_TYPEDEP_hd-emmc = "ext4 tar.bz2"
 
 do_image_hd_emmc[depends] = " \
     parted-native:do_populate_sysroot \
@@ -68,16 +68,25 @@ IMAGE_CMD_hd-emmc () {
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_4 ::
     dd conv=notrunc if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* ${BLOCK_SECTOR})
     dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${KERNEL_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
-    resize2fs ${IMGDEPLOYDIR}/${IMAGE_LINK} ${ROOTFS_PARTITION_SIZE}k
+    resize2fs ${IMGDEPLOYDIR}/${IMAGE_LINK}.ext4 ${ROOTFS_PARTITION_SIZE}k
     # Truncate on purpose
-    dd if=${IMGDEPLOYDIR}/${IMAGE_LINK} of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR}) count=$(expr ${IMAGE_ROOTFS_SIZE} \* ${BLOCK_SECTOR})
+    dd if=${IMGDEPLOYDIR}/${IMAGE_LINK}.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR}) count=$(expr ${IMAGE_ROOTFS_SIZE} \* ${BLOCK_SECTOR})
 }
 
 IMAGE_CMD_hd-emmc_append = "\
     cd ${DEPLOY_DIR_IMAGE}; \
     mkdir -p ${IMAGEDIR}; \
-    bzip2 -f ${IMGDEPLOYDIR}/${IMAGE_LINK}; \
-    mv ${IMGDEPLOYDIR}/${IMAGE_LINK}.bz2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+    bzip2 -f ${IMGDEPLOYDIR}/${IMAGE_LINK}.ext4; \
+    cp ${IMGDEPLOYDIR}/${IMAGE_LINK}.ext4.bz2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+    cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
+    echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
+    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_flash.zip ${IMAGEDIR}/*; \
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_flash.zip ${IMAGENAME}_flash.zip; \
+    rm -Rf ${IMAGEDIR}; \
+    \
+    cd ${DEPLOY_DIR_IMAGE}; \
+    mkdir -p ${IMAGEDIR}; \
+    cp ${IMGDEPLOYDIR}/${IMAGE_LINK}.tar.bz2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar.bz2; \
     cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGEDIR}/*; \
@@ -89,6 +98,7 @@ IMAGE_CMD_hd-emmc_append = "\
     echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGEDIR}/*; \
     ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGENAME}_usb.zip; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.tar; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.json; \
