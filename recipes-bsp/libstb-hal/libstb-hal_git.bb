@@ -15,16 +15,9 @@ DEPENDS = "\
 	libao \
 	libass \
 	libaio \
-	gstreamer1.0 \
-	gstreamer1.0-plugins-base \
-	gstreamer1.0-plugins-good \
-	gstreamer1.0-plugins-bad \
-	gstreamer1.0-plugins-ugly \	
-	glib-2.0 \
 	fontconfig \
 	atk \
 	libpng \
-	harfbuzz \
 	freetype \
 "
 
@@ -55,10 +48,6 @@ inherit autotools pkgconfig
 
 LDFLAGS += " -Wl,-rpath-link,${STAGING_LIBDIR} -L${STAGING_LIBDIR} -lrt -lavformat -lavcodec -lavutil -lswscale"
 
-CXXFLAGS_append += "-I${STAGING_INCDIR}/gstreamer-1.0 \
-					-I${STAGING_INCDIR}/glib-2.0 \
-					-I${STAGING_LIBDIR}/glib-2.0/include \
-"
 
 EXTRA_OECONF += "\
 	--enable-maintainer-mode \
@@ -89,4 +78,3 @@ FILES_${PN} = "\
 "
 
 FILES_${PN}-dev += "${includedir}"
-
