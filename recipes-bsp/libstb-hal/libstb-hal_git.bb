@@ -46,7 +46,7 @@ S = "${WORKDIR}/git"
 # but I want it to build inside the source for various reasons :-)
 inherit autotools pkgconfig
 
-LDFLAGS += " -Wl,-rpath-link,${STAGING_LIBDIR} -L${STAGING_LIBDIR} -lrt -lavformat -lavcodec -lavutil -lswscale"
+LDFLAGS += " -Wl,-rpath-link,${STAGING_LIBDIR} -L${STAGING_LIBDIR} -lrt -lavformat -lavcodec -lavutil -lswscale -lswresample"
 
 
 EXTRA_OECONF += "\
