@@ -96,6 +96,7 @@ IMAGE_CMD_hd-emmc_append = "\
     mkdir -p ${IMAGEDIR}; \
     mv ${IMAGE_NAME}.emmc.img ${IMAGEDIR}/disk.img; \
     echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/imageversion; \
     zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGEDIR}/*; \
     ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGENAME}_usb.zip; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.tar; \
@@ -104,4 +105,5 @@ IMAGE_CMD_hd-emmc_append = "\
     rm -f ${DEPLOY_DIR_IMAGE}/*.json; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.img; \
     rm -Rf ${IMAGEDIR}; \
+    \
 "
