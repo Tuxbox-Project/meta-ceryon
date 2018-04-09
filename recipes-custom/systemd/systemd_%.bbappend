@@ -40,6 +40,6 @@ ALTERNATIVE_TARGET[resolv-conf] = "/etc/resolv.conf"
 ALTERNATIVE_LINK_NAME[resolv-conf] = ""
 ALTERNATIVE_PRIORITY[resolv-conf] ?= "50"
 
-pkg_postinst_udev-hwdb () {
+pkg_postinst_ontarget_udev-hwdb () {
 		udevadm hwdb --update
 }
