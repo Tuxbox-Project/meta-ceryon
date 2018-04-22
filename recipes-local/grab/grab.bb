@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/oe-alliance/aio-grab;protocol=https \
 		   file://fbshot \
 "
 
-SRCREV = "${AUTOREV}"
+SRCREV = "84041846cfeb190f1ebf328a5012dac28d102087"
 
 S = "${WORKDIR}/git"
 
