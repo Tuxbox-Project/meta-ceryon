@@ -1,8 +1,9 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append += "file://00-create-volatile.conf \
-				   file://etc.conf \
-                           file://logind.conf \
+		   file://etc.conf \
+		   file://logind.conf \
+	 	   file://network.target \
 "
 
 PACKAGECONFIG =   "xz \
@@ -33,7 +34,8 @@ do_install_append() {
 	sed -i "s|slave|shared|" ${D}/lib/systemd/system/systemd-udevd.service 
 	install -m 0644 ${WORKDIR}/etc.conf ${D}${libdir}/tmpfiles.d/etc.conf
 	rm -r ${D}${sysconfdir}/resolv-conf.systemd
-      install -m 0644 ${WORKDIR}/logind.conf ${D}/etc/systemd/
+	install -m 0644 ${WORKDIR}/logind.conf ${D}/etc/systemd/
+        install -m 644 ${WORKDIR}/network.target ${D}${systemd_unitdir}/system
 }
 
 ALTERNATIVE_TARGET[resolv-conf] = "/etc/resolv.conf"
