@@ -23,6 +23,8 @@ automount() {
         if echo $ID_BUS | grep usb 2> /dev/null; then
                 if [ -n "${ID_FS_LABEL+x}" ]; then
 			name="$ID_FS_LABEL"
+                elif [ -n "${PARTNAME+x}" ]; then
+                       	name="$PARTNAME"
                 else
 			name="$ID_FS_UUID"
                 fi
