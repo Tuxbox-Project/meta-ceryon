@@ -20,17 +20,17 @@ done
 automount() {
 	name="`basename "$DEVNAME"`"
 	echo $ID_BUS | grep ata 2> /dev/null && name="HDD"
-        if echo $ID_BUS | grep usb 2> /dev/null; then
-                if echo ${ID_PATH} | grep 0:1.3:1.0 2> /dev/null; then
-                       	name="USB"
-                elif [ -n "${ID_FS_LABEL+x}" ]; then
+	if echo $ID_BUS | grep usb 2> /dev/null; then
+		if echo ${ID_PATH} | grep 0:1.3:1.0 2> /dev/null; then
+			name="USB"
+		elif [ -n "${ID_FS_LABEL+x}" ]; then
 			name="$ID_FS_LABEL"
-                elif [ -n "${PARTNAME+x}" ]; then
-                       	name="$PARTNAME"
-                else
+		elif [ -n "${PARTNAME+x}" ]; then
+			name="$PARTNAME"
+		else
 			name="$ID_FS_UUID"
-                fi
-        fi
+		fi
+	fi
 	! test -d "/media/$name" && mkdir -p "/media/$name"
 	# Silent util-linux's version of mounting auto
 	if [ "x`readlink $MOUNT`" = "x/bin/mount.util-linux" ] ;
@@ -71,17 +71,17 @@ rm_dir() {
 
 name="`basename "$DEVNAME"`"
 echo $ID_BUS | grep ata 2> /dev/null && name="HDD"
-        if echo $ID_BUS | grep usb 2> /dev/null; then
-                if echo ${ID_PATH} | grep 0:1.3:1.0 2> /dev/null; then
-                       	name="USB"
-                elif [ -n "${ID_FS_LABEL+x}" ]; then
-                       	name="$ID_FS_LABEL"
-                elif [ -n "${PARTNAME+x}" ]; then
-                       	name="$PARTNAME"
-                else
-                       	name="$ID_FS_UUID"
-                fi
-        fi
+	if echo $ID_BUS | grep usb 2> /dev/null; then
+		if echo ${ID_PATH} | grep 0:1.3:1.0 2> /dev/null; then
+			name="USB"
+		elif [ -n "${ID_FS_LABEL+x}" ]; then
+			name="$ID_FS_LABEL"
+		elif [ -n "${PARTNAME+x}" ]; then
+			name="$PARTNAME"
+		else
+			name="$ID_FS_UUID"
+		fi
+	fi
 
 if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
 	if [ -x "$PMOUNT" ]; then
