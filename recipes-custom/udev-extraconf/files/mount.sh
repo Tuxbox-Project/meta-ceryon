@@ -21,7 +21,9 @@ automount() {
 	name="`basename "$DEVNAME"`"
 	echo $ID_BUS | grep ata 2> /dev/null && name="HDD"
         if echo $ID_BUS | grep usb 2> /dev/null; then
-                if [ -n "${ID_FS_LABEL+x}" ]; then
+                if echo ${ID_PATH} | grep 0:1.3:1.0 2> /dev/null; then
+                       	name="USB"
+                elif [ -n "${ID_FS_LABEL+x}" ]; then
 			name="$ID_FS_LABEL"
                 elif [ -n "${PARTNAME+x}" ]; then
                        	name="$PARTNAME"
@@ -67,17 +69,19 @@ rm_dir() {
 	fi
 }
 
-# No ID_FS_TYPE for cdrom device, yet it should be mounted
-	[ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
-        name="`basename "$DEVNAME"`"
-	echo $ID_BUS | grep ata 2> /dev/null && name="HDD"
-	if echo $ID_BUS | grep usb 2> /dev/null; then
-		if [ -n "${ID_FS_LABEL+x}" ]; then
-			name="$ID_FS_LABEL"
-		else
-			name="$ID_FS_UUID"
-		fi
-	fi
+name="`basename "$DEVNAME"`"
+echo $ID_BUS | grep ata 2> /dev/null && name="HDD"
+        if echo $ID_BUS | grep usb 2> /dev/null; then
+                if echo ${ID_PATH} | grep 0:1.3:1.0 2> /dev/null; then
+                       	name="USB"
+                elif [ -n "${ID_FS_LABEL+x}" ]; then
+                       	name="$ID_FS_LABEL"
+                elif [ -n "${PARTNAME+x}" ]; then
+                       	name="$PARTNAME"
+                else
+                       	name="$ID_FS_UUID"
+                fi
+        fi
 
 if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
 	if [ -x "$PMOUNT" ]; then
@@ -115,4 +119,3 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ]; the
 	readlink -f /sys/class/block/sd[a-z]/device | grep usb 2> /dev/null && usb_present="1"
 	[ -z ${usb_present+x} ] && echo 0 > /proc/stb/lcd/symbol_usb
 fi
-
