@@ -60,6 +60,9 @@ YT_DEV_KEY = ""
 TMDB_DEV_KEY = ""
 # put your shoutcast_dev_id here, if you need shoutcast functionality
 SHOUTCAST_DEV_KEY = ""
+# put your omdb_api_key here, if you want to query the imdb database
+OMDB_API_KEY = ""
+
 
 # Put additional packages that should be packaged into your image. Separated with a whitespace. 
 IMAGE_INSTALL_append += ""
