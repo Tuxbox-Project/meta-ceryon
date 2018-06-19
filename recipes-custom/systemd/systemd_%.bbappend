@@ -31,7 +31,6 @@ PACKAGECONFIG =   "xz \
 "
 
 do_install_append() {
-	sed -i "s|slave|shared|" ${D}/lib/systemd/system/systemd-udevd.service 
 	install -m 0644 ${WORKDIR}/etc.conf ${D}${libdir}/tmpfiles.d/etc.conf
 	rm -r ${D}${sysconfdir}/resolv-conf.systemd
 	install -m 0644 ${WORKDIR}/logind.conf ${D}/etc/systemd/
