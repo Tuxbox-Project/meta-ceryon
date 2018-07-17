@@ -4,6 +4,7 @@ SRC_URI_append += "file://00-create-volatile.conf \
 		   file://etc.conf \
 		   file://logind.conf \
 	 	   file://network.target \
+		   file://getty@.service \
 "
 
 PACKAGECONFIG =   "xz \
@@ -35,6 +36,8 @@ do_install_append() {
 	rm -r ${D}${sysconfdir}/resolv-conf.systemd
 	install -m 0644 ${WORKDIR}/logind.conf ${D}/etc/systemd/
         install -m 644 ${WORKDIR}/network.target ${D}${systemd_unitdir}/system
+        install -m 644 ${WORKDIR}/getty@.service ${D}${systemd_unitdir}/system
+	rm -rf ${D}/etc/systemd/system/getty.target.wants/getty@tty1.service
 }
 
 ALTERNATIVE_TARGET[resolv-conf] = "/etc/resolv.conf"
