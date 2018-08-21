@@ -10,7 +10,10 @@ PKGV = "3.x+git${GITPKGV}"
 PV = "3.x+git${SRCPV}"
 PR = "r2"
 
-SRC_URI = "git://github.com/oe-alliance/ofgwrite.git"
+SRC_URI = "git://github.com/oe-alliance/ofgwrite.git \
+	   file://0001-fix-build.patch \
+"
+DEPENDS += "mtd-utils"
 
 inherit autotools-brokensep pkgconfig
 
