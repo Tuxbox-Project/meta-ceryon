@@ -1,34 +1,44 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
+DEPENDS_append += "glib-2.0"
+
 SRC_URI_append += "file://00-create-volatile.conf \
 		   file://etc.conf \
 		   file://logind.conf \
 	 	   file://network.target \
 		   file://getty@.service \
+		   file://0001-workaround-statx-redefinition.patch \
 "
 
-PACKAGECONFIG =   "xz \
-                   ${@bb.utils.filter('DISTRO_FEATURES', 'efi pam selinux ldconfig usrmerge', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
-                   binfmt \
-                   randomseed \
-                   machined \
-                   backlight \
-                   vconsole \
-                   quotacheck \
-                   hostnamed \
-                   ${@bb.utils.contains('TCLIBC', 'glibc', 'myhostname sysusers', '', d)} \
-                   hibernate \
-                   timedated \
-                   timesyncd \
-                   localed \
-                   ima \
-                   smack \
-                   logind \
-                   firstboot \
-                   utmp \
-                   polkit \
+PACKAGECONFIG ??= " \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'efi ldconfig pam selinux usrmerge', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
+    acl \
+    backlight \
+    binfmt \
+    firstboot \
+    gshadow \
+    hibernate \
+    hostnamed \
+    ima \
+    kmod \
+    localed \
+    logind \
+    machined \
+    myhostname \
+    networkd \
+    nss \
+    polkit \
+    quotacheck \
+    randomseed \
+    smack \
+    sysusers \
+    timedated \
+    timesyncd \
+    utmp \
+    vconsole \
+    xz \
 "
 
 do_install_append() {
