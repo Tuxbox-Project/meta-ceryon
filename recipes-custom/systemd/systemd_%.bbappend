@@ -7,22 +7,18 @@ SRC_URI_append += "file://00-create-volatile.conf \
 		   file://logind.conf \
 	 	   file://network.target \
 		   file://getty@.service \
-		   file://0001-workaround-statx-redefinition.patch \
 "
 
 PACKAGECONFIG ??= " \
     ${@bb.utils.filter('DISTRO_FEATURES', 'efi ldconfig pam selinux usrmerge', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
-    acl \
     backlight \
     binfmt \
     firstboot \
-    gshadow \
     hibernate \
     hostnamed \
     ima \
-    kmod \
     localed \
     logind \
     machined \
