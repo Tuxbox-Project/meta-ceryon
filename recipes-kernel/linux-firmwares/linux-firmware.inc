@@ -1,7 +1,6 @@
-inherit gitpkgv allarch
+inherit allarch
 
-PV = "1.1+git${SRCPV}"
-PKGV = "1.1+git${GITPKGV}"
+PV = "${SRCPV}"
 
 SRC_URI = "git://github.com/BjornLee/linux-firmware.git;protocol=git \
 	   file://license \
