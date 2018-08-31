@@ -35,8 +35,6 @@ SRC_URI_append_arm = " \
 	file://findkerneldevice.py \
 	file://reserve_dvb_adapter_0.patch \
 	file://blacklist_mmc0.patch \
-	file://tda18250.patch \
-	file://dvb.cfg \
 	file://export_pmpoweroffprepare.patch \
 	"
 
