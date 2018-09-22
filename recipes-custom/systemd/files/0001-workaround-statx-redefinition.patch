@@ -1,0 +1,44 @@
+From f42de00af4e9f1f4df567758bd2c76e1ff16f702 Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Sat, 18 Aug 2018 13:26:47 +0200
+Subject: [PATCH] workaround statx redefinition
+
+Signed-off-by: Markus Volk <f_l_k@t-online.de>
+---
+ src/basic/missing.h    | 53 +++++++++++++++++++++++++++++++++++++++++++++-----
+ src/basic/xattr-util.c |  2 +-
+ 2 files changed, 49 insertions(+), 6 deletions(-)
+
+diff --git a/src/basic/missing.h b/src/basic/missing.h
+index 71a07d0574..1e7ecedf98 100644
+--- a/src/basic/missing.h
++++ b/src/basic/missing.h
+@@ -1362,7 +1405,7 @@ struct fib_rule_uid_range {
+ #define PF_KTHREAD 0x00200000
+ #endif
+ 
+-#if ! HAVE_STRUCT_STATX
++/*#if ! HAVE_STRUCT_STATX
+ struct statx_timestamp {
+         int64_t tv_sec;
+         uint32_t tv_nsec;
+@@ -1392,7 +1435,7 @@ struct statx {
+         uint64_t __spare2[14];
+ };
+ #endif
+-
++*/
+ #ifndef STATX_BTIME
+ #define STATX_BTIME 0x00000800U
+ #endif
+--- a/src/basic/xattr-util.c    2018-08-20 16:33:18.600014849 +0200
++++ b/src/basic/xattr-util.c    2018-08-20 17:25:26.343774582 +0200
+@@ -1,5 +1,5 @@
+ /* SPDX-License-Identifier: LGPL-2.1+ */
+-
++#include <sys/stat.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <stdint.h>
+--
+2.13.3
