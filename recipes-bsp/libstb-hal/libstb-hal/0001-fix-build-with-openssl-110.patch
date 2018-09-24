@@ -1,0 +1,65 @@
+From eb93c8ecab89084e85e1262610f322f077da69cc Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Sat, 22 Sep 2018 15:33:20 +0200
+Subject: [PATCH] fix build with openssl 110
+
+Signed-off-by: Markus Volk <f_l_k@t-online.de>
+---
+ libdvbci/dh_rsa_misc.cpp | 23 ++++++++++++-----------
+ libdvbci/dvbci_ccmgr.cpp |  2 +-
+ 2 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/libdvbci/dh_rsa_misc.cpp b/libdvbci/dh_rsa_misc.cpp
+index 921821e..85fba5c 100644
+--- a/libdvbci/dh_rsa_misc.cpp
++++ b/libdvbci/dh_rsa_misc.cpp
+@@ -148,21 +148,22 @@ int dh_gen_exp(uint8_t *dest, int dest_len, uint8_t *dh_g, int dh_g_len, uint8_t
+ 
+ 	dh = DH_new();
+ 
+-	dh->p = BN_bin2bn(dh_p, dh_p_len, 0);
+-	dh->g = BN_bin2bn(dh_g, dh_g_len, 0);
+-	dh->flags |= DH_FLAG_NO_EXP_CONSTTIME;
++	BIGNUM* p = BN_bin2bn(dh_p, sizeof(dh_p), 0);
++	BIGNUM* g = BN_bin2bn(dh_g, sizeof(dh_g), 0);
++	if ((DH_set0_pqg(dh, p, NULL, g) == 0) || (DH_set_length(dh, 160) == 0))
++//	dh->flags |= DH_FLAG_NO_EXP_CONSTTIME;
+ 
+ 	DH_generate_key(dh);
+ 
+-	len = BN_num_bytes(dh->priv_key);
+-	if (len > dest_len) {
+-		printf("len > dest_len\n");
+-		return -1;
+-	}
++//	len = BN_num_bytes(dh->priv_key);
++//	if (len > dest_len) {
++//		printf("len > dest_len\n");
++//		return -1;
++//	}
+ 
+-	gap = dest_len - len;
+-	memset(dest, 0, gap);
+-	BN_bn2bin(dh->priv_key, &dest[gap]);
++//	gap = dest_len - len;
++//	memset(dest, 0, gap);
++//	BN_bn2bin(dh->priv_key, &dest[gap]);
+ 
+ 	DH_free(dh);
+ 
+diff --git a/libdvbci/dvbci_ccmgr.cpp b/libdvbci/dvbci_ccmgr.cpp
+index 53f3658..340ef1a 100644
+--- a/libdvbci/dvbci_ccmgr.cpp
++++ b/libdvbci/dvbci_ccmgr.cpp
+@@ -240,7 +240,7 @@ static bool certificate_validate(struct cert_ctx *ctx, X509 *cert)
+ 	ret = X509_verify_cert(store_ctx);
+ 
+ 	if (ret != 1)
+-		fprintf(stderr, "%s\n", X509_verify_cert_error_string(store_ctx->error));
++		fprintf(stderr, "%s\n", X509_verify_cert_error_string(ret));
+ 
+ 	X509_STORE_CTX_free(store_ctx);
+ 
+-- 
+2.13.3
+
