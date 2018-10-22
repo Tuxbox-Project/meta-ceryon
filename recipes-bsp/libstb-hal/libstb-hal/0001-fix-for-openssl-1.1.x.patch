@@ -1,45 +1,39 @@
-From 51655a6e7001b5265510af759fe13ebbccc7e003 Mon Sep 17 00:00:00 2001
+From 94bc375ed620808aff0bf27e6e2e7e2c014e8235 Mon Sep 17 00:00:00 2001
 From: Markus Volk <f_l_k@t-online.de>
-Date: Thu, 18 Oct 2018 10:01:29 +0200
+Date: Mon, 22 Oct 2018 09:00:38 +0200
 Subject: [PATCH] fix for openssl 1.1.x
 
 Signed-off-by: Markus Volk <f_l_k@t-online.de>
 ---
- libdvbci/dh_rsa_misc.cpp | 17 +++++++++++------
+ libdvbci/dh_rsa_misc.cpp | 12 +++++++-----
  libdvbci/dvbci_ccmgr.cpp |  2 +-
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/libdvbci/dh_rsa_misc.cpp b/libdvbci/dh_rsa_misc.cpp
-index 921821e..a095d81 100644
+index 921821e..57f158b 100644
 --- a/libdvbci/dh_rsa_misc.cpp
 +++ b/libdvbci/dh_rsa_misc.cpp
-@@ -146,15 +146,20 @@ int dh_gen_exp(uint8_t *dest, int dest_len, uint8_t *dh_g, int dh_g_len, uint8_t
- 	int len;
- 	unsigned int gap;
+@@ -148,13 +148,15 @@ int dh_gen_exp(uint8_t *dest, int dest_len, uint8_t *dh_g, int dh_g_len, uint8_t
  
--	dh = DH_new();
+ 	dh = DH_new();
  
 -	dh->p = BN_bin2bn(dh_p, dh_p_len, 0);
 -	dh->g = BN_bin2bn(dh_g, dh_g_len, 0);
 -	dh->flags |= DH_FLAG_NO_EXP_CONSTTIME;
-+	const BIGNUM *p;
-+	const BIGNUM *g;
-+	p = BN_bin2bn(dh_p, dh_p_len, 0);
-+	g = BN_bin2bn(dh_g, dh_g_len, 0);
-+//	flags |= DH_FLAG_NO_EXP_CONSTTIME;
-+       dh = DH_new();
++	BIGNUM *p = BN_bin2bn(dh_p, dh_p_len, 0);
++	BIGNUM *g = BN_bin2bn(dh_g, dh_g_len, 0);
++	DH_set0_pqg(dh, p, NULL, g);
  
  	DH_generate_key(dh);
  
 -	len = BN_num_bytes(dh->priv_key);
 +	const BIGNUM *pub_key, *priv_key;
 +	DH_get0_key(dh, &pub_key, &priv_key);
-+	DH_get0_pqg(dh,&p,NULL,NULL);
 +	len = BN_num_bytes(priv_key);
  	if (len > dest_len) {
  		printf("len > dest_len\n");
  		return -1;
-@@ -162,7 +167,7 @@ int dh_gen_exp(uint8_t *dest, int dest_len, uint8_t *dh_g, int dh_g_len, uint8_t
+@@ -162,7 +164,7 @@ int dh_gen_exp(uint8_t *dest, int dest_len, uint8_t *dh_g, int dh_g_len, uint8_t
  
  	gap = dest_len - len;
  	memset(dest, 0, gap);
