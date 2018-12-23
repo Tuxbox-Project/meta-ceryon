@@ -38,8 +38,8 @@ MACHINE ?= "hd51"
 # What image to build ?
 IMAGENAME = "neutrino-image"
 
-# Choose neutrino source. Possible values are "mp", "tango" or "ni"
-FLAVOUR = "mp"
+# Choose neutrino source. Possible values are "tuxbox", "tango" or "ni"
+FLAVOUR = "tuxbox"
 
 # set initial passwort for user root. Keep empty for root:
 ROOTPW = ""
