@@ -1,4 +1,1 @@
-EXTRA_OECONF_append += " \
-	--with-boxtype=hd51 \
-"
-
+include ${FLAVOUR}.inc
