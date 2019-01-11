@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount Image Partitions  
+
+[Mount]
+What=/dev/mmcblk0p7
+Where=/mnt/partition_3
+Type=ext4
+Options=nofail,noauto,rw
+
+[Install]
+WantedBy=multi-user.target
+
+

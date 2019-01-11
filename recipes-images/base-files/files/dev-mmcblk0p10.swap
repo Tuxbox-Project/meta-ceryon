@@ -1,0 +1,10 @@
+[Unit]
+Description=Mount Swap Partiton
+
+[Swap]
+What=/dev/mmcblk0p10
+
+Options=nofail,auto
+
+[Install]
+WantedBy=multi-user.target

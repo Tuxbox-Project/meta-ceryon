@@ -1,0 +1,11 @@
+[Unit]
+Description=Mount Root Partition
+Before=local-fs.target
+
+[Mount]
+Where=/
+What=/dev/root
+
+[Install]
+WantedBy=multi-user.target
+

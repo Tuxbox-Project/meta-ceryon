@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount Boot Partition
+Before=local-fs.target
+
+[Mount]
+What=/dev/mmcblk0p1
+Where=/boot
+Type=vfat
+Options=defaults
+
+[Install]
+WantedBy=multi-user.target
+
