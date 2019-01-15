@@ -13,6 +13,7 @@ SRC_URI_append += " \
         file://mnt-partition_3.mount \
         file://mnt-partition_4.mount \
 	file://dev-mmcblk0p10.swap \
+	file://mount.sh \
 "
 
 do_install_append() {
@@ -21,6 +22,7 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/local.sh ${D}${bindir}
 	install -m 0755 ${WORKDIR}/flash ${D}${bindir}
 	install -m 0755 ${WORKDIR}/imgbackup ${D}${bindir}
+        install -m 0755 ${WORKDIR}/mount.sh ${D}${bindir}
 	install -m 0644 ${WORKDIR}/-.mount ${D}${systemd_unitdir}/system
 	ln -sf /lib/systemd/system/-.mount  ${D}${systemd_unitdir}/system/multi-user.target.wants
 	install -m 0644 ${WORKDIR}/boot.mount ${D}${systemd_unitdir}/system
