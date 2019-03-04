@@ -6,7 +6,6 @@ SRC_URI_append += "file://00-create-volatile.conf \
 		   file://etc.conf \
 	 	   file://network.target \
 		   file://getty@.service \
-           file://0001-workaround-statx-redefinition.patch \
 "
 
 PACKAGECONFIG ??= " \
