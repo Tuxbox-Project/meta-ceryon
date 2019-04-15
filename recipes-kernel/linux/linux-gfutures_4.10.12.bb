@@ -34,6 +34,7 @@ SRC_URI_append = " \
 	file://reserve_dvb_adapter_0.patch \
 	file://blacklist_mmc0.patch \
 	file://export_pmpoweroffprepare.patch \
+	file://initramfs-subdirboot.cpio.gz;unpack=0 \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
@@ -46,6 +47,11 @@ KERNEL_IMAGETYPE_arm = "zImage"
 KERNEL_IMAGEDEST_arm = "tmp"
 
 FILES_${KERNEL_PACKAGE_NAME}-image_arm = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/findkerneldevice.sh"
+
+kernel_do_configure_prepend_arm() {
+    install -d ${B}/usr
+    install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+}
 
 kernel_do_install_append_arm() {
         install -d ${D}/${KERNEL_IMAGEDEST}

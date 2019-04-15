@@ -71,6 +71,8 @@ IMAGE_CMD_hd-emmc () {
     resize2fs ${IMGDEPLOYDIR}/${IMAGE_LINK}.ext4 ${ROOTFS_PARTITION_SIZE}k
     # Truncate on purpose
     dd if=${IMGDEPLOYDIR}/${IMAGE_LINK}.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
+    cp ${IMGDEPLOYDIR}/${IMAGE_LINK}.rootfs.tar.bz2 ${IMGDEPLOYDIR}/${IMAGEDIR}/${MACHINE}/rootfs.tar.bz2; \
+    zip -r ../${DISTRO_NAME}-${DISTRO_VERSION}-${MACHINE}_multiboot_ofgwrite.zip ${MACHINE}/imageversion ${MACHINE}/zImage ${MACHINE}/rootfs.tar.bz2; \
 }
 
 IMAGE_CMD_hd-emmc_append = "\

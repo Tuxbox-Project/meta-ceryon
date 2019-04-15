@@ -14,10 +14,9 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 
 #IMAGE_CLASSES += "hd-emmc_image_single"
-IMAGE_CLASSES += "hd-emmc_image_multi"
+IMAGE_CLASSES += "hd-emmc_image_multiboot"
 
 
 IMAGE_FSTYPES += "hd-emmc"
-IMAGE_ROOTFS_SIZE ?= "294912"
 
 
