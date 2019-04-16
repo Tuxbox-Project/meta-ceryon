@@ -19,7 +19,7 @@ BLOCK_SECTOR = "2"
 IMAGE_ROOTFS_ALIGNMENT = "1024"
 BOOT_PARTITION_SIZE = "3072"
 KERNEL_PARTITION_SIZE = "8192"
-ROOTFS_PARTITION_SIZE = "815104"
+ROOTFS_PARTITION_SIZE = "1048576"
 EMMC_IMAGE_SIZE = "3817472"
 
 KERNEL_PARTITION_OFFSET = "$(expr ${IMAGE_ROOTFS_ALIGNMENT} \+ ${BOOT_PARTITION_SIZE})"
@@ -51,14 +51,14 @@ IMAGE_CMD_hd-emmc () {
     echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_LINUX_3_BOXMODE_12
     echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_LINUX_4_BOXMODE_12
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_1_MODE_1 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_2_MODE_1 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_3_MODE_1 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_4_MODE_1 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_1_MODE_12 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_2_MODE_12 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_3_MODE_12 ::
-    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_BOOTSLOT_4_MODE_12 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_1_BOXMODE_1 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_2_BOXMODE_1 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_3_BOXMODE_1 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_4_BOXMODE_1 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_1_BOXMODE_12 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_2_BOXMODE_12 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_3_BOXMODE_12 ::
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_4_BOXMODE_12 ::
     dd conv=notrunc if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* ${BLOCK_SECTOR})
     dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${KERNEL_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
     dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
