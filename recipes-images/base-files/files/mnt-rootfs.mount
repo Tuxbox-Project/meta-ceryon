@@ -1,13 +1,11 @@
 [Unit]
-Description=Mount Image Partitions  
+Description=Mount Image Partitions
 
 [Mount]
-What=/dev/mmcblk0p5
-Where=/mnt/partition_2
+What=/dev/mmcblk0p3
+Where=/mnt/rootfs
 Type=ext4
 Options=nofail,noauto,rw
 
 [Install]
 WantedBy=multi-user.target
-
-

@@ -2,8 +2,7 @@
 Description=Mount Swap Partiton
 
 [Swap]
-What=/dev/mmcblk0p10
-
+What=/mnt/userdata/swapfile
 Options=nofail,auto
 
 [Install]
