@@ -8,7 +8,7 @@ SRC_URI_append += " \
 	file://imgbackup \
 	file://-.mount \
 	file://boot.mount \
-	file://mnt-linuxrootfs.mount \
+	file://mnt-linuxrootfs1.mount \
 	file://mnt-userdata.mount \
         file://mnt-userdata-swapfile.swap \
 	file://mount.sh \
@@ -25,8 +25,8 @@ do_install_append() {
 	ln -sf /lib/systemd/system/-.mount  ${D}${systemd_unitdir}/system/multi-user.target.wants
 	install -m 0644 ${WORKDIR}/boot.mount ${D}${systemd_unitdir}/system
 	ln -sf /lib/systemd/system/boot.mount  ${D}${systemd_unitdir}/system/multi-user.target.wants
-	install -m 0644 ${WORKDIR}/mnt-linuxrootfs.mount ${D}${systemd_unitdir}/system
-	ln -sf /lib/systemd/system/mnt-linuxrootfs.mount  ${D}${systemd_unitdir}/system/multi-user.target.wants
+	install -m 0644 ${WORKDIR}/mnt-linuxrootfs1.mount ${D}${systemd_unitdir}/system
+	ln -sf /lib/systemd/system/mnt-linuxrootfs1.mount  ${D}${systemd_unitdir}/system/multi-user.target.wants
         install -m 0644 ${WORKDIR}/mnt-userdata.mount ${D}${systemd_unitdir}/system
 	ln -sf /lib/systemd/system/mnt-userdata.mount  ${D}${systemd_unitdir}/system/multi-user.target.wants
         install -m 0644 ${WORKDIR}/mnt-userdata-swapfile.swap ${D}${systemd_unitdir}/system
