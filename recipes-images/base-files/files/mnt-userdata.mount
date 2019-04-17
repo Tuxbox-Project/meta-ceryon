@@ -1,5 +1,5 @@
 [Unit]
-Description=Mount Image Partitions  
+Description=Mount Userdata Partition  
 
 [Mount]
 What=/dev/mmcblk0p7

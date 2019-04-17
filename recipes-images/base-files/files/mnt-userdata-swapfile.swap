@@ -1,5 +1,5 @@
 [Unit]
-Description=Mount Swap Partiton
+Description=Swapon Swap File
 
 [Swap]
 What=/mnt/userdata/swapfile
