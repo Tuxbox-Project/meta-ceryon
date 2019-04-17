@@ -23,8 +23,8 @@ if [ -e $GIT_EXIST ];then
 elif mountpoint -q $DEST;then
         cd /etc
         if [ ! -e /etc/gitconfig ];then
-                git config --system user.name "flk"
-                git config --system user.email "f_l_k@t-online.de"
+                git config --system user.name "GIT_USER"
+                git config --system user.email "MAIL"
                 git config --system core.editor "nano"
                 git config --system http.sslverify false
         fi
