@@ -1,5 +1,5 @@
 #!/bin/sh
 
-rootnumber=$(sed -e 's/^.*root=//' -e 's/ .*$//' < /proc/cmdline | grep -Eo '[1-9]')
-(( kernelnumber = $rootnumber - 1 ))
-ln -sf /dev/mmcblk0p$kernelnumber /dev/kernel
+image=$(sed -e 's/^.*rootsubdir=//' -e 's/ .*$//' < /proc/cmdline | grep -o '[0-9]')
+if [ image="1" ]; then image=""; fi
+ln -sf /dev/disk/by-partlabel/linuxkernel$image /dev/kernel
