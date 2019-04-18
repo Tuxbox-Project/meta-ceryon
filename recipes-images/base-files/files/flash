@@ -22,6 +22,26 @@ resolution="1920x1080"
 [ $res_setting = "0" ] && resolution="1280x720"
 
 pidof neutrino >> /dev/null && killall -9 neutrino
+
+function stop_services () {
+	pidof smbd >> /dev/null && systemctl stop smb
+	pidof nmbd >> /dev/null && systemctl stop nmb
+	pidof xupnpd >> /dev/null && systemctl stop xupnpd
+	pidof udpxy >> /dev/null && systemctl stop udpxy
+	netstat -tl | grep nfs >> /dev/null && systemctl stop nfs-server && systemctl stop nfs-mountd && systemctl stop nfs-statd
+	pidof oscam >> /dev/null && systemctl stop oscam
+	pidof cccam >> /dev/null && systemctl stop cccam
+	pidof gbox >> /dev/null && systemctl stop gbox
+	netstat -tl | grep webmin >> /dev/null && systemctl stop webmin
+	netstat -tl | grep sunrpc >> /dev/null && systemctl -q stop rpcbind
+	netstat -tl | grep ftp >> /dev/null && systemctl stop proftpd
+	pidof minidlnad >> /dev/null && systemctl stop minidlna
+	pidof automount >> /dev/null && systemctl stop autofs
+	pidof ntpdate >> /dev/null && systemctl stop ntpdate
+	cd /etc && git status  >> /dev/null && systemctl -q stop etckeeper
+	pidof sshd >> /dev/null && systemctl stop sshd.socket
+}
+
 clear
 convert -resize $resolution -gravity center -extent $resolution $picture_source/update.jpg bgra:/dev/fb0
 
@@ -43,10 +63,8 @@ exit_done() {
 }
 
 [[ $* = "-h" ]] || [[ $* = "--help" ]] && printf '\n\033[31m%s\n' "Give the destination partition number [1 - 4] as first argument.
-
 As second argument you can specify the path where the image is stored.
 If no second argument is given the image will be downloaded from
-
 $imagesource
 " && exit 0;
 
@@ -68,6 +86,9 @@ fi
 
 imageversion_local="$imagebase/imageversion_partition_$part"
 
+[ $root = $part ] && stop_services
+[ -z $2 ] ||  echo $2 | grep "/" >> /dev/null || [ $2 = "force" ] || [ $2 = "restore" ] || { printf '\n\033[31m%s\n' "Please choose a valid path" && exit 9; }
+
 function write_image () {
 	printf '\n\n\033[1m%s\n\033[0m' "Writing image into partition $part"
 	echo "Writing image into partition $part" > $dev_display
@@ -84,11 +105,11 @@ function write_image () {
 }
 
 if [[ ! $1 = "force" ]] && [[ ! $2 = "force" ]]; then
-	if [[ $* = "restore" ]] || [ ! -z $2 ]; then
+	if [[ $* = "restore" ]] || [[ ! -z $2 ]]; then
 		for i in $1 $2; do
 			case $i in
 				restore)
-					imagedir="$imagebase/backup/partition$part/$machine"
+					imagedir="$imagebase/backup/partition_$part/$machine"
 					restore_image="1"
 					;;
 				1|2|3|4)
@@ -102,6 +123,13 @@ if [[ ! $1 = "force" ]] && [[ ! $2 = "force" ]]; then
 					;;
 			esac
 		done
+		imageversion="$imagedir/imageversion"
+		[[ -f $imageversion ]] && [[ -d $imagebase ]] && cp -rf $imageversion $imageversion_local
+		[ ! -f $imagedir/$rootfs ] && printf '\n%s\n' "$imagedir/$rootfs not found" && exit_done
+		[ ! -f $imagedir/$kernel_bin ] && printf '\n%s\n' "$imagedir/$kernel_bin not found" && exit_done
+		space_available="$(df -Pk $imagedir | awk 'NR==2 {print $4}')"
+		[ $space_available -lt 1048576 ] && printf '\n\033[31m%s\n' "You need at least 1G of free space on your device" && exit_done
+		write_image
 	fi
 fi
 
