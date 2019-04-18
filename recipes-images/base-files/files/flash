@@ -2,59 +2,47 @@
 
 machine="hd51"
 url="https://tuxbox-images.de/images/$machine"
-imagename="neutrino-image-$machine.ext4.bz2"
-image_dec="neutrino-image-$machine.ext4"
-image="neutrino-image_flash.zip"
+image="neutrino-image_ofgwrite.zip"
 imagesource="$url/$image"
 hdd_mount="/media/usb"
 mountpoint -q /media/hdd && hdd_mount="/media/hdd"
+destination="/mnt/userdata"
 imagebase="$hdd_mount/service/image"
 imageversion_online="$url/imageversion"
-kernelname="kernel.bin"
+imageversion_local="$imagebase/imageversion_partition_$part"
 picture_source="/usr/share/tuxbox/neutrino/icons"
-devbase="/dev/mmcblk0p"
+rootfs="rootfs.tar.bz2"
+kernel_bin="kernel.bin"
+rootbase="linuxrootfs"
+kernelbase="linuxkernel"
+devbase="/dev/disk/by-partlabel"
 dev_display="/dev/dbox/oled0"
-rootdevice="$(sed -e 's/^.*root=//' -e 's/ .*$//' < /proc/cmdline)"
-
-function stop_services () {
-	pidof smbd >> /dev/null && systemctl stop smb
-	pidof nmbd >> /dev/null && systemctl stop nmb
-	pidof xupnpd >> /dev/null && systemctl stop xupnpd
-	pidof udpxy >> /dev/null && systemctl stop udpxy
-	netstat -tl | grep nfs >> /dev/null && systemctl stop nfs-server && systemctl stop nfs-mountd && systemctl stop nfs-statd
-	pidof oscam >> /dev/null && systemctl stop oscam
-	pidof cccam >> /dev/null && systemctl stop cccam
-	pidof gbox >> /dev/null && systemctl stop gbox
-	netstat -tl | grep webmin >> /dev/null && systemctl stop webmin
-	netstat -tl | grep sunrpc >> /dev/null && systemctl -q stop rpcbind
-	netstat -tl | grep ftp >> /dev/null && systemctl stop proftpd
-	pidof minidlnad >> /dev/null && systemctl stop minidlna
-	pidof automount >> /dev/null && systemctl stop autofs
-	pidof ntpdate >> /dev/null && systemctl stop ntpdate
-	cd /etc && git status  >> /dev/null && systemctl -q stop etckeeper
-	pidof sshd >> /dev/null && systemctl stop sshd.socket
-}
+root="$(sed -e 's/^.*rootsubdir=//' -e 's/ .*$//' < /proc/cmdline | grep -o '[1-4]')"
+res_setting="$(cat /etc/neutrino/config/neutrino.conf | grep osd_resolution | grep -o '[0-1]')"
+resolution="1920x1080"
+[ $res_setting = "0" ] && resolution="1280x720"
 
 pidof neutrino >> /dev/null && killall -9 neutrino
 clear
-convert -resize 1920x1080 -gravity center -extent 1920x1080 $picture_source/update.jpg bgra:/dev/fb0
+convert -resize $resolution -gravity center -extent $resolution $picture_source/update.jpg bgra:/dev/fb0
 
 exit_done() {
-	if [ $rootdevice = $devbase$root ];then
+	systemctl daemon-reload
+	if [ $root = $part ];then
 		if [[ $no_update_available = "1" ]];then
 			printf '\n\033[32m%s\n\033[0m' "No update available"
+			pidof neutrino >> /dev/null || systemctl start neutrino
 			exit 0;
 		else
-			echo "...Reboot" > $dev_display && systemctl --force --force reboot
+			echo "...Reboot" > $dev_display && systemctl reboot
 		fi
 	else
 		sleep 3
 		clear
-		systemctl start neutrino
+		pidof neutrino >> /dev/null || systemctl start neutrino
 	fi
 	exit 0;
 }
-
 
 [[ $* = "-h" ]] || [[ $* = "--help" ]] && printf '\n\033[31m%s\n' "Give the destination partition number [1 - 4] as first argument.
 
@@ -68,80 +56,52 @@ if [[ $1 =~ ^[0-9]+$ ]]; then
 	if  [ $1 -lt 1 ] || [ $1 -gt 4 ]; then
 		printf '\n\033[31m%s\n' "Choose a valid partition [1-4]" ; exit 1;
 	elif [ $1 = 1 ]; then
-		part=1; kernel=2; root=3
+		part=1; append=""
 	elif [ $1 = 2 ]; then
-		part=2; kernel=4; root=5
+		part=2; append=$part
 	elif [ $1 = 3 ]; then
-		part=3; kernel=6; root=7
+		part=3; append=$part
 	elif [ $1 = 4 ]; then
-		part=4; kernel=8; root=9
+		part=4; append=$part
 	fi
 else
-	if [[ -z $1 ]] || [[ -z $2 ]] || [[ $* = "restore" ]] || [[ $* = "force" ]]; then
-		if echo $rootdevice | grep "3"; then
-	                part=1; kernel=2; root=3
-                elif echo $rootdevice | grep "5"; then
-                        part=2; kernel=4; root=5
-                elif echo $rootdevice | grep "7"; then
-                        part=3; kernel=6; root=7
-                elif echo $rootdevice | grep "9"; then
-                        part=4; kernel=8; root=9
-		fi
-	else
-		printf '\n\033[31m%s\n' "Please give the partition number [1-4] as first argument" ; exit 1;
-	fi
+	printf '\n\033[31m%s\n' "Please give the partition number [1-4] as first argument" ; exit 1;
 fi
 
-imageversion_local="$imagebase/imageversion_partition_$part"
-
-partition_sectorsize="$(gdisk -l $devbase$root | grep 'Total free space' | awk '{print $5}')"
-[ $partition_sectorsize -ne 1638333 ] && printf '\n\033[31m%s\n' "The partition scheme is invalid ... use ofgwrite for flashing" && exit 2;
-[ -z $2 ] ||  echo $2 | grep "/" >> /dev/null || [ $2 = "force" ] || [ $2 = "restore" ] || { printf '\n\033[31m%s\n' "Please choose a valid path" && exit 9; } 
-
 function write_image () {
-[[ $rootdevice = $devbase$root ]] && stop_services
-mountpoint -q /mnt/partition_"$part" && systemctl stop mnt-partition_"$part".mount
-
 printf '\n\n\033[1m%s\n\033[0m' "Writing image into partition $part"
 echo "Writing image into partition $part" > $dev_display
 
-printf '\n\033[33m%s\033[37m%s\n' "Writing kernel into $devbase$kernel"
-pv -w 100 < $imagedir/$kernelname > $devbase$kernel
+printf '\n\033[33m%s\033[37m%s\n' "Writing kernel into $devbase/$kernelbase$append"
+pv -w 100 < $imagedir/$kernel_bin > $devbase/$kernelbase$append
 
-printf '\n\033[33m%s\033[37m%s\n' "Writing rootfs into $devbase$root"
-bzip2 -cd $imagedir/$imagename | pv -w 100 > $devbase$root
+printf '\n\033[33m%s\033[37m%s\n' "Writing rootfs into $destination/$rootbase$part"
+mkdir -p $destination/$rootbase$part
+pv $imagedir/$rootfs -w 100 | tar -xjf - -C $destination/$rootbase$part
 printf '\n\033[1m\033[32m%s\033[0m\n' "Flash successful"; printf '\033[1m\033[0m'
 echo "Flash succeeded" > $dev_display
-mountpoint -q /mnt/partition_"$part" || systemctl start mnt-partition_"$part".mount
 exit_done
 }
 
 if [[ ! $1 = "force" ]] && [[ ! $2 = "force" ]]; then
 	if [[ $* = "restore" ]] || [ ! -z $2 ]; then
 		for i in $1 $2; do
-  	      		case $i in
-        	        	restore)
-                	        	imagedir="$imagebase/backup/partition$part/$machine"
+			case $i in
+				restore)
+					imagedir="$imagebase/backup/partition$part/$machine"
 					restore_image="1"
-                		;;
-                		1|2|3|4)
-                        		imagedir="$2"
-                		;;
-                		/*)
-                   			imagedir="$2"
-                		;;
-                		"")
+					;;
+				1|2|3|4)
+					imagedir="$2"
+					;;
+				/*)
+					imagedir="$2"
+					;;
+				"")
 					imagedir="$1"
-                		;;
-        		esac
+					;;
+			esac
 		done
-	imageversion="$imagedir/imageversion"
-	[[ -f $imageversion ]] && [[ -d $imagebase ]] && cp -rf $imageversion $imageversion_local
-        [ ! -f $imagedir/$imagename ] && printf '\n%s\n' "$imagedir/$imagename not found" && exit_done
-        [ ! -f $imagedir/$kernelname ] && printf '\n%s\n' "$imagedir/$kernelname not found" && exit_done
-        space_available="$(df -Pk $imagedir | awk 'NR==2 {print $4}')"
-        [ $space_available -lt 1048576 ] && printf '\n\033[31m%s\n' "You need at least 1G of free space on your device" && exit_done
-        write_image
 	fi
 fi
 
@@ -155,7 +115,7 @@ if [[ -z $1 ]] || [[ $* = "force" ]] || [[ ! $* = "restore" ]] || [[ $1 =~ ^[0-9
 			space_available="$(df -Pk $imagebase | awk 'NR==2 {print $4}')"
 			[ $space_available -lt 1048576 ] && printf '\n\033[31m%s\n' "You need at least 1G of free space on $hdd_mount" && exit_done
 			if [[ -z $2 ]] && [[ ! $1 = "force" ]]; then
-        			[ ! -f $imageversion_local ] && touch $imageversion_local
+				[ ! -f $imageversion_local ] && touch $imageversion_local
 				md5_imageversion_online=$(curl -s $imageversion_online | md5sum | awk '{print $1}')
 				md5_imageversion_local=$(md5sum "$imageversion_local" | awk '{print $1}')
 				if [ $md5_imageversion_online = $md5_imageversion_local ]; then
@@ -164,7 +124,7 @@ if [[ -z $1 ]] || [[ $* = "force" ]] || [[ ! $* = "restore" ]] || [[ $1 =~ ^[0-9
 					exit_done;
 				fi
 			elif [[ $1 = "force" ]] || [[ $2 = "force" ]]; then
-                		printf '\033[31m'
+				printf '\033[31m'
 			fi
 			echo "Downloading $image" > $dev_display
 			printf '\n\033[1m%s\n\033[0m' "Downloading $imagesource"
@@ -172,12 +132,13 @@ if [[ -z $1 ]] || [[ $* = "force" ]] || [[ ! $* = "restore" ]] || [[ $1 =~ ^[0-9
 			curl $imagesource -o $imagefile || exit_done
 			[ -d $imagedir ] && rm -r $imagedir
 			echo "Decompressing $image" > $dev_display
-        		printf '\n\033[1m%s\n\033[0m' "Decompressing  $image"
+			printf '\n\033[1m%s\n\033[0m' "Decompressing  $image"
 			$unpack || exit_done;
 			[[ -f $imageversion ]] && [[ -d $imagebase ]] && cp -rf $imageversion $imageversion_local
 			[ -f $imagefile ] && rm $imagefile
 
 			write_image
-		;;
+			;;
 	esac
 fi
+
