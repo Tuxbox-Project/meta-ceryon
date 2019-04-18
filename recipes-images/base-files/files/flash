@@ -9,7 +9,6 @@ mountpoint -q /media/hdd && hdd_mount="/media/hdd"
 destination="/mnt/userdata"
 imagebase="$hdd_mount/service/image"
 imageversion_online="$url/imageversion"
-imageversion_local="$imagebase/imageversion_partition_$part"
 picture_source="/usr/share/tuxbox/neutrino/icons"
 rootfs="rootfs.tar.bz2"
 kernel_bin="kernel.bin"
@@ -28,20 +27,19 @@ convert -resize $resolution -gravity center -extent $resolution $picture_source/
 
 exit_done() {
 	systemctl daemon-reload
-	if [ $root = $part ];then
-		if [[ $no_update_available = "1" ]];then
-			printf '\n\033[32m%s\n\033[0m' "No update available"
-			pidof neutrino >> /dev/null || systemctl start neutrino
-			exit 0;
-		else
-			echo "...Reboot" > $dev_display && systemctl reboot
-		fi
+	if [[ $no_update_available = "1" ]];then
+		printf '\n\033[32m%s\n\033[0m' "No update available"
+		pidof neutrino >> /dev/null || systemctl start neutrino
+		exit 0;
+	elif [ $root = $part ];then
+		echo "...Reboot" > $dev_display && systemctl reboot
+		exit 0;
 	else
 		sleep 3
 		clear
 		pidof neutrino >> /dev/null || systemctl start neutrino
+		exit 0;
 	fi
-	exit 0;
 }
 
 [[ $* = "-h" ]] || [[ $* = "--help" ]] && printf '\n\033[31m%s\n' "Give the destination partition number [1 - 4] as first argument.
@@ -68,19 +66,21 @@ else
 	printf '\n\033[31m%s\n' "Please give the partition number [1-4] as first argument" ; exit 1;
 fi
 
+imageversion_local="$imagebase/imageversion_partition_$part"
+
 function write_image () {
-printf '\n\n\033[1m%s\n\033[0m' "Writing image into partition $part"
-echo "Writing image into partition $part" > $dev_display
+	printf '\n\n\033[1m%s\n\033[0m' "Writing image into partition $part"
+	echo "Writing image into partition $part" > $dev_display
 
-printf '\n\033[33m%s\033[37m%s\n' "Writing kernel into $devbase/$kernelbase$append"
-pv -w 100 < $imagedir/$kernel_bin > $devbase/$kernelbase$append
+	printf '\n\033[33m%s\033[37m%s\n' "Writing kernel into $devbase/$kernelbase$append"
+	pv -w 100 < $imagedir/$kernel_bin > $devbase/$kernelbase$append
 
-printf '\n\033[33m%s\033[37m%s\n' "Writing rootfs into $destination/$rootbase$part"
-mkdir -p $destination/$rootbase$part
-pv $imagedir/$rootfs -w 100 | tar -xjf - -C $destination/$rootbase$part
-printf '\n\033[1m\033[32m%s\033[0m\n' "Flash successful"; printf '\033[1m\033[0m'
-echo "Flash succeeded" > $dev_display
-exit_done
+	printf '\n\033[33m%s\033[37m%s\n' "Writing rootfs into $destination/$rootbase$part"
+	mkdir -p $destination/$rootbase$part
+	pv $imagedir/$rootfs -w 100 | tar -xjf - -C $destination/$rootbase$part
+	printf '\n\033[1m\033[32m%s\033[0m\n' "Flash successful"; printf '\033[1m\033[0m'
+	echo "Flash succeeded" > $dev_display
+	exit_done
 }
 
 if [[ ! $1 = "force" ]] && [[ ! $2 = "force" ]]; then
@@ -141,4 +141,3 @@ if [[ -z $1 ]] || [[ $* = "force" ]] || [[ ! $* = "restore" ]] || [[ $1 =~ ^[0-9
 			;;
 	esac
 fi
-
