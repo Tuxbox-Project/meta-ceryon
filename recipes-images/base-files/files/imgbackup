@@ -19,51 +19,32 @@ resolution="1920x1080"
 [ $res_setting = "0" ] && resolution="1280x720"
 
 if ! [[ $1 =~ ^[1-4]+$ ]]; then
-                part_to_use=$root
+	part_to_use=$root
 fi
 
 exit_done() {
 	sleep 1
-        clear
-        systemctl start neutrino
-        exit 0;
+	clear
+	systemctl start neutrino
+	exit 0;
 }
 
 
-[  -z "$2" ] && [  -z "$1" ] && [ ! -d "$hdd_mount" ] && { printf '\n\033[31m%s\n' "Give the destination path an argument" && exit_done; }
+[ -z "$2" ] && [  -z "$1" ] && [ ! -d "$hdd_mount" ] && { printf '\n\033[31m%s\n' "Give the destination path an argument" && exit_done; }
 
 if [[ "$part_to_use" =~ ^[0-9]+$ ]]; then
-        if  [ "$part_to_use" -lt 1 ] || [ $1 -gt 4 ]; then
+	if [ "$part_to_use" -lt 1 ] || [ $1 -gt 4 ]; then
 		{ printf '\n\033[31m%s\n' "Choose a valid partition [1-4]"; exit_done; }
-        elif [ "$part_to_use" = 1 ]; then
-                part=1; append=""
-        elif [ "$part_to_use" = 2 ]; then
-                part=2; append=$part
-        elif [ "$part_to_use" = 3 ]; then
-                part=3; append=$part
-        elif [ "$part_to_use" = 4 ]; then
-                part=4; append=$part
+	elif [ "$part_to_use" = 1 ]; then
+		part=1; append=""
+	elif [ "$part_to_use" = 2 ]; then
+		part=2; append=$part
+	elif [ "$part_to_use" = 3 ]; then
+		part=3; append=$part
+	elif [ "$part_to_use" = 4 ]; then
+		part=4; append=$part
 	fi
 fi
-
-function stop_services () {
-        pidof smbd >> /dev/null && systemctl stop smb
-        pidof nmbd >> /dev/null && systemctl stop nmb
-        pidof xupnpd >> /dev/null && systemctl stop xupnpd
-        pidof udpxy >> /dev/null && systemctl stop udpxy
-        netstat -tl | grep nfs >> /dev/null && systemctl stop nfs-server && systemctl stop nfs-mountd && systemctl stop nfs-statd
-        pidof oscam >> /dev/null && systemctl stop oscam
-        pidof cccam >> /dev/null && systemctl stop cccam
-        pidof gbox >> /dev/null && systemctl stop gbox
-        netstat -tl | grep webmin >> /dev/null && systemctl stop webmin
-        netstat -tl | grep sunrpc >> /dev/null && systemctl -q stop rpcbind
-        netstat -tl | grep ftp >> /dev/null && systemctl stop proftpd
-        pidof minidlnad >> /dev/null && systemctl stop minidlna
-        pidof automount >> /dev/null && systemctl stop autofs
-        pidof ntpdate >> /dev/null && systemctl stop ntpdate
-        cd /etc && git status  >> /dev/null && systemctl -q stop etckeeper
-        pidof sshd >> /dev/null && systemctl stop sshd.socket
-}
 
 pidof neutrino >> /dev/null && killall -9 neutrino
 clear
@@ -86,8 +67,6 @@ printf '\n\n\n\033[1m%s\n\033[0m' "Creating backup of partition $part" && echo "
 
 [ -d "$destination" ] && rm -rf "$destination"
 mkdir -p "$destination"
-
-[[ "$root" = "$part" ]] && stop_services
 
 printf '\n\033[33m%s\033[37m%s\n' "Creating kernel backup in $destination/$kernelname"  && echo "Creating kernel backup" > "$dev_display"
 pv -w 100 < "$devbase/$kernelbase$append" > "$destination/$kernelname"
