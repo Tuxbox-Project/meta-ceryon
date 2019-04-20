@@ -64,37 +64,29 @@ IMAGE_CMD_hd-emmc () {
     dd if=${IMGDEPLOYDIR}/${IMAGE_LINK}.rootfs.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=$(expr ${ROOTFS_PARTITION_OFFSET} \* ${BLOCK_SECTOR})
 }
 
-IMAGE_CMD_hd-emmc_append = "\
-    cd ${DEPLOY_DIR_IMAGE}; \
-    mkdir -p ${IMAGEDIR}; \
-    cp ${IMGDEPLOYDIR}/${IMAGE_LINK}.rootfs.ext4 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    bzip2 -f ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${IMAGE_LINK}.rootfs.ext4; \
-    cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
-    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_flash.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_flash.zip ${IMAGENAME}_flash.zip; \
-    rm -Rf ${IMAGEDIR}; \
-    \
-    cd ${DEPLOY_DIR_IMAGE}; \
-    mkdir -p ${IMAGEDIR}; \
-    cp ${IMGDEPLOYDIR}/${IMAGE_LINK}.tar.bz2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar.bz2; \
-    cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
-    echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
-    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGENAME}_ofgwrite.zip; \
-    rm -Rf ${IMAGEDIR}; \
-    \
-    mkdir -p ${IMAGEDIR}; \
-    cp -f ${IMGDEPLOYDIR}/${IMAGE_NAME}.emmc.img ${IMAGEDIR}/disk.img; \
-    echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/imageversion; \
-    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGENAME}_usb.zip; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.tar; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.json; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.img; \
-    rm -Rf ${IMAGEDIR}; \
-    \
-"
+image_packaging() {
+    cd ${DEPLOY_DIR_IMAGE}
+    mkdir -p ${MACHINE}
+    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.tar.bz2 ${MACHINE}/rootfs.tar.bz2
+    cp zImage ${MACHINE}/${KERNEL_FILE}
+    echo ${IMAGE_NAME} > ${MACHINE}/imageversion
+    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${MACHINE}/*
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGENAME}_ofgwrite.zip
+    rm -Rf ${MACHINE}
+    
+    cd ${DEPLOY_DIR_IMAGE}
+    mkdir -p ${MACHINE}
+    cp -f ${IMGDEPLOYDIR}/${IMAGE_NAME}.emmc.img ${MACHINE}/disk.img
+    echo ${IMAGE_NAME} > ${MACHINE}/imageversion
+    echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/imageversion
+    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${MACHINE}/*
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGENAME}_usb.zip
+    rm -f ${DEPLOY_DIR_IMAGE}/*.tar
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ext4
+    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest
+    rm -f ${DEPLOY_DIR_IMAGE}/*.json
+    rm -f ${DEPLOY_DIR_IMAGE}/*.img
+    rm -Rf ${MACHINE}
+}
+
+IMAGE_POSTPROCESS_COMMAND += "image_packaging; "
