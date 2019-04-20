@@ -23,25 +23,6 @@ resolution="1920x1080"
 
 pidof neutrino >> /dev/null && killall -9 neutrino
 
-function stop_services () {
-	pidof smbd >> /dev/null && systemctl stop smb
-	pidof nmbd >> /dev/null && systemctl stop nmb
-	pidof xupnpd >> /dev/null && systemctl stop xupnpd
-	pidof udpxy >> /dev/null && systemctl stop udpxy
-	netstat -tl | grep nfs >> /dev/null && systemctl stop nfs-server && systemctl stop nfs-mountd && systemctl stop nfs-statd
-	pidof oscam >> /dev/null && systemctl stop oscam
-	pidof cccam >> /dev/null && systemctl stop cccam
-	pidof gbox >> /dev/null && systemctl stop gbox
-	netstat -tl | grep webmin >> /dev/null && systemctl stop webmin
-	netstat -tl | grep sunrpc >> /dev/null && systemctl -q stop rpcbind
-	netstat -tl | grep ftp >> /dev/null && systemctl stop proftpd
-	pidof minidlnad >> /dev/null && systemctl stop minidlna
-	pidof automount >> /dev/null && systemctl stop autofs
-	pidof ntpdate >> /dev/null && systemctl stop ntpdate
-	cd /etc && git status  >> /dev/null && systemctl -q stop etckeeper
-	pidof sshd >> /dev/null && systemctl stop sshd.socket
-}
-
 clear
 convert -resize $resolution -gravity center -extent $resolution $picture_source/update.jpg bgra:/dev/fb0
 
@@ -86,7 +67,6 @@ fi
 
 imageversion_local="$imagebase/imageversion_partition_$part"
 
-[ $root = $part ] && stop_services
 [ -z $2 ] ||  echo $2 | grep "/" >> /dev/null || [ $2 = "force" ] || [ $2 = "restore" ] || { printf '\n\033[31m%s\n' "Please choose a valid path" && exit 9; }
 
 function write_image () {
@@ -95,6 +75,8 @@ function write_image () {
 
 	printf '\n\033[33m%s\033[37m%s\n' "Writing kernel into $devbase/$kernelbase$append"
 	pv -w 100 < $imagedir/$kernel_bin > $devbase/$kernelbase$append
+
+	[ $root = $part ] || rm -rf $destination/$rootbase$part/*
 
 	printf '\n\033[33m%s\033[37m%s\n' "Writing rootfs into $destination/$rootbase$part"
 	mkdir -p $destination/$rootbase$part
