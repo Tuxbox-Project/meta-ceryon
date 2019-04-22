@@ -2,7 +2,6 @@ inherit image_types
 
 IMAGE_FSTYPES += "tar.bz2"
 IMAGE_ROOTFS = "${WORKDIR}/rootfs/linuxrootfs1"
-IMAGE_ROOTFS_SIZE ?= "499712"
 
 do_image_hd_emmc[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
@@ -35,7 +34,7 @@ IMAGE_CMD_hd-emmc () {
     if [ $ROOTFS_SIZE -lt $MIN_COUNT ]; then
         eval COUNT=\"$MIN_COUNT\"
     fi
-    dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 seek=${IMAGE_ROOTFS_SIZE} count=$COUNT bs=1024
+    dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 seek=${ROOTFS_SIZE} count=$COUNT bs=1024
     mkfs.ext4 -F -i 4096 ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 -d ${WORKDIR}/rootfs
     ln -sf ${IMAGE_NAME}.rootfs.ext4 ${IMGDEPLOYDIR}/${IMAGE_LINK}.rootfs.ext4
     dd if=/dev/zero of=${EMMC_IMAGE} bs=${BLOCK_SIZE} count=0 seek=$(expr ${EMMC_IMAGE_SIZE} \* ${BLOCK_SECTOR})
