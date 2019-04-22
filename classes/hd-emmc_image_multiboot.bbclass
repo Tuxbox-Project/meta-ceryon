@@ -2,6 +2,7 @@ inherit image_types
 
 IMAGE_FSTYPES += "tar.bz2"
 IMAGE_ROOTFS = "${WORKDIR}/rootfs/linuxrootfs1"
+IMAGE_ROOTFS_MAXSIZE = "1044480"
 
 do_image_hd_emmc[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
