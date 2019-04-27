@@ -34,7 +34,9 @@ bootfile = "/boot/STARTUP"
 
 for line in io.lines(bootfile) do
 	i, j = string.find(line, devbase)
-	current_root = tonumber(string.sub(line,j+1,j+1))
+	if (j ~= nil) then
+		current_root = tonumber(string.sub(line,j+1,j+1))
+	end
 end
 
 locale = {}
@@ -67,22 +69,22 @@ function reboot()
 end
 
 function basename(str)
-        local name = string.gsub(str, "(.*/)(.*)", "%2")
-        return name
+	local name = string.gsub(str, "(.*/)(.*)", "%2")
+	return name
 end
 
 function get_imagename(root)
-        local glob = require "posix".glob
-        for _, j in pairs(glob('/boot/*', 0)) do
-                for line in io.lines(j) do
-                        if (j ~= bootfile) then
-                                if line:match(devbase .. root) then
-                                        imagename = basename(j)
-                                end
-                        end
-                end
-        end
-        return imagename
+	local glob = require "posix".glob
+	for _, j in pairs(glob('/boot/*', 0)) do
+		for line in io.lines(j) do
+			if (j ~= bootfile) or (j ~= nil) then
+				if line:match(devbase .. root) then
+				imagename = basename(j)
+			end
+		end
+	end
+end
+return imagename
 end
 
 function exists(file)
@@ -108,7 +110,7 @@ if locale[lang] == nil then
 end
 timing_menu = neutrino_conf:getString("timing.menu", "0")
 
-chooser_dx = n:scale2Res(600)
+chooser_dx = n:scale2Res(700)
 chooser_dy = n:scale2Res(200)
 chooser_x = SCREEN.OFF_X + (((SCREEN.END_X - SCREEN.OFF_X) - chooser_dx) / 2)
 chooser_y = SCREEN.OFF_Y + (((SCREEN.END_Y - SCREEN.OFF_Y) - chooser_dy) / 2)
@@ -168,8 +170,8 @@ chooser:hide()
 if colorkey then
 	if isdir("/mnt/" .. devbase .. root) then
 		-- found image folder
-        elseif isdir("/mnt/userdata/" .. devbase .. root) then
-                -- found image folder
+	elseif isdir("/mnt/userdata/" .. devbase .. root) then
+		-- found image folder
 	else
 		local ret = hintbox.new { title = caption, icon = "settings", text = locale[lang].empty_partition };
 		ret:paint();
@@ -187,15 +189,20 @@ end
 
 if res == "yes" then
 	local glob = require "posix".glob
+	local startup_lines = {}
 	for _, j in pairs(glob('/boot/*', 0)) do
 		for line in io.lines(j) do
-			if line:match(devbase .. root) then
-				if (j ~= bootfile) then
-					local file = io.open(bootfile, "w")
-					file:write(line)
-					file:close()
+			if (j ~= bootfile) or (j ~= nil) then
+				if line:match(devbase .. root) then
+					for line in io.lines(j) do
+						table.insert(startup_lines, line)
+					end
 				end
 			end
+		end
+		file = io.open(bootfile, 'w')
+		for i, v in ipairs(startup_lines) do
+			file:write(v, "\n")
 		end
 	end
 	reboot()
