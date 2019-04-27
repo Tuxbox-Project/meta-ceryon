@@ -204,6 +204,7 @@ if res == "yes" then
 		for i, v in ipairs(startup_lines) do
 			file:write(v, "\n")
 		end
+		file:close()
 	end
 	reboot()
 end
