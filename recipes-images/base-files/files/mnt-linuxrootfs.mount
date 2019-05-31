@@ -3,7 +3,7 @@ Description=Mount Linuxrootfs Partition
 
 [Mount]
 What=/dev/mmcblk0p3
-Where=/mnt/linuxrootfs1
+Where=/mnt/linuxrootfs
 Type=ext4
 Options=nofail,noauto,rw
 
