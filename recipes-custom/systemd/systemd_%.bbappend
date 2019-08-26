@@ -41,7 +41,9 @@ PACKAGECONFIG ??= " \
 
 do_install_append() {
 	install -m 0644 ${WORKDIR}/etc.conf ${D}${libdir}/tmpfiles.d/etc.conf
-	rm -r ${D}${sysconfdir}/resolv-conf.systemd
+	rm -r ${D}${sysconfdir}/resolv-conf.systemd 
+	rm -r ${D}${sysconfdir}/systemd/logind.conf
+	rm -r ${D}${sysconfdir}/systemd/journald.conf
         install -m 644 ${WORKDIR}/network.target ${D}${systemd_unitdir}/system
         install -m 644 ${WORKDIR}/getty@.service ${D}${systemd_unitdir}/system
 	rm -rf ${D}/etc/systemd/system/getty.target.wants/getty@tty1.service
