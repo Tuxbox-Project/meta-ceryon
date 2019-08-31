@@ -9,16 +9,16 @@ SRC_URI_append += "file://00-create-volatile.conf \
 "
 
 PACKAGECONFIG ??= " \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'efi ldconfig pam selinux usrmerge', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'efi ldconfig pam selinux usrmerge polkit', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
     acl \
     backlight \
     binfmt \
-    firstboot \
     gshadow \
     hibernate \
     hostnamed \
+    idn \
     ima \
     kmod \
     localed \
@@ -27,9 +27,11 @@ PACKAGECONFIG ??= " \
     myhostname \
     networkd \
     nss \
-    polkit \
+    nss-mymachines \
+    nss-resolve \
     quotacheck \
     randomseed \
+    resolved \
     smack \
     sysusers \
     timedated \
@@ -38,6 +40,7 @@ PACKAGECONFIG ??= " \
     vconsole \
     xz \
 "
+
 
 do_install_append() {
 	install -m 0644 ${WORKDIR}/etc.conf ${D}${libdir}/tmpfiles.d/etc.conf

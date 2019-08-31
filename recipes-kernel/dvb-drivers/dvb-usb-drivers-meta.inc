@@ -6,7 +6,7 @@ inherit allarch
 PACKAGES = "${PN}"
 ALLOW_EMPTY_${PN} = "1"
 
-SRC_URI_append += "file://${PN}.conf"
+SRC_URI_append += "file://${BPN}.conf"
 
 do_install() {
 	install -d ${D}${sysconfdir}/modules-load.d
