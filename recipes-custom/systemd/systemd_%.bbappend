@@ -52,9 +52,7 @@ do_install_append() {
 	rm -rf ${D}/etc/systemd/system/getty.target.wants/getty@tty1.service
 }
 
-ALTERNATIVE_TARGET[resolv-conf] = "/etc/resolv.conf"
-ALTERNATIVE_LINK_NAME[resolv-conf] = ""
-ALTERNATIVE_PRIORITY[resolv-conf] ?= "50"
+ALTERNATIVE_${PN} = "halt reboot shutdown poweroff runlevel"
 
 pkg_postinst_ontarget_udev-hwdb () {
 		udevadm hwdb --update
