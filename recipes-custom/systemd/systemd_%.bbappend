@@ -8,40 +8,6 @@ SRC_URI_append += "file://00-create-volatile.conf \
 		   file://getty@.service \
 "
 
-PACKAGECONFIG ??= " \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'efi ldconfig pam selinux usrmerge polkit', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
-    acl \
-    backlight \
-    binfmt \
-    gshadow \
-    hibernate \
-    hostnamed \
-    idn \
-    ima \
-    kmod \
-    localed \
-    logind \
-    machined \
-    myhostname \
-    networkd \
-    nss \
-    nss-mymachines \
-    nss-resolve \
-    quotacheck \
-    randomseed \
-    resolved \
-    smack \
-    sysusers \
-    timedated \
-    timesyncd \
-    utmp \
-    vconsole \
-    xz \
-"
-
-
 do_install_append() {
 	install -m 0644 ${WORKDIR}/etc.conf ${D}${libdir}/tmpfiles.d/etc.conf
 	rm -r ${D}${sysconfdir}/resolv-conf.systemd 
