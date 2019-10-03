@@ -4,14 +4,11 @@ BB_NUMBER_THREADS ?= "4"
 # Determine how many processes make should run in parallel when running compile tasks:
 PARALLEL_MAKE ?= "-j 4"
 
-
 ### System variables
 DL_DIR ?= "${COREBASE}/yocto-downloads"
 #SDKMACHINE ?= "i686"
 SDKMACHINE = "x86_64"
 DEFAULT_TIMEZONE = "Europe/Berlin"
-
-
 
 ### Disk Space Monitoring during the build
 BB_DISKMON_DIRS = "\
@@ -22,7 +19,18 @@ BB_DISKMON_DIRS = "\
     ABORT,${DL_DIR},100M,1K \
     ABORT,${SSTATE_DIR},100M,1K" 
 
-
+# Hash Equivalence
+#
+# Enable support for automatically running a local hash equivalence server and
+# instruct bitbake to use a hash equivalence aware signature generator. Hash
+# equivalence improves reuse of sstate by detecting when a given sstate
+# artifact can be reused as equivalent, even if the current task hash doesn't
+# match the one that generated the artifact.
+#
+# A shared hash equivalent server can be set with "<HOSTNAME>:<PORT>" format+#
+#
+BB_HASHSERVE = "auto"
+BB_SIGNATURE_HANDLER = "OEEquivHash"
 
 ### Qemu configuration
 PACKAGECONFIG_pn-qemu-native = "sdl"
