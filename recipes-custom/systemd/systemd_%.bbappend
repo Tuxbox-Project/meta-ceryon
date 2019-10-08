@@ -4,9 +4,11 @@ DEPENDS_append += "glib-2.0"
 
 SRC_URI_append += "file://00-create-volatile.conf \
 		   file://etc.conf \
-	 	   file://network.target \
+		   file://network.target \
 		   file://getty@.service \
 "
+
+PACKAGECONFIG_remove = "networkd resolved nss-resolve"
 
 do_install_append() {
 	install -m 0644 ${WORKDIR}/etc.conf ${D}${libdir}/tmpfiles.d/etc.conf
