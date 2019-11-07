@@ -9,5 +9,5 @@ COMPATIBLE_MACHINE = "hd51"
 
 INSANE_SKIP_${PN} += "ldflags"
 
-RPROVIDES_${PN} = "libegl"
-RPROVIDES_${PN} = "libgles2"
+RPROVIDES_${PN} = "virtual/egl"
+RPROVIDES_${PN} = "virtual/libgles2"

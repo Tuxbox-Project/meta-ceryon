@@ -23,13 +23,13 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}${libdir}/${QEGLFS}
-	install -m 0755 libqeglfs-nxpl-integration.so ${D}${libdir}/${QEGLFS}/
+	install -d ${D}${libdir}/plugins/egldeviceintegrations
+	install -m 0755 libqeglfs-nxpl-integration.so ${D}${libdir}/plugins/egldeviceintegrations/
 }
 
 do_package_qa() {
 }
 
-FILES_${PN} = "/usr/lib/qt5/plugins/egldeviceintegrations/libqeglfs-nxpl-integration.so"
+FILES_${PN} = "/usr"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"
