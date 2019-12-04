@@ -11,7 +11,8 @@ fi
 RCCODE="/etc/rccode"
 [ -e /var/etc/rccode ] && RCCODE="/var/etc/rccode"
 
-if [ -e $RCCODE ]; then
+if [ -e $RCCODE ] && [ $(cat $RCCODE) != $(cat /proc/stb/ir/rc/type) ]; then
+        echo "Switching remote protocol"
         case $(cat $RCCODE) in
                 4) echo 4 > /proc/stb/ir/rc/type ;;
                 5) echo 5 > /proc/stb/ir/rc/type ;;
