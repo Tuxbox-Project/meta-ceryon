@@ -48,6 +48,9 @@ MACHINE ?= "hd51"
 # What image to build ?
 IMAGENAME = "neutrino-image"
 
+# Could be set to small
+IMAGESIZE = "normal"
+
 # Choose neutrino source. Possible values are "tuxbox", "tango" or "ni"
 FLAVOUR = "tuxbox"
 
