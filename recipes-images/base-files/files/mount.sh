@@ -18,10 +18,7 @@ MOUNT_POINT=$(/bin/mount | /bin/grep ${DEVICE} | /usr/bin/awk '{ print $3 }')
 
 do_mount()
 {
-        if [[ -n ${MOUNT_POINT} ]] || [[ ${MOUNT_POINT} = " " ]]; then
-                echo "Warning: ${DEVICE} is already mounted at ${MOUNT_POINT}"
-               	exit 1
-	fi
+    /bin/grep -q ${DEVICE} /proc/mounts && echo "Warning: ${DEVICE} is already mounted at ${MOUNT_POINT}" && exit 1
 
 	if udevadm info --query=property --name=${DEVICE} | grep "ID_FS_LABEL="; then
                	LABEL="$(udevadm info --query=property --name=${DEVICE} | grep ID_FS_LABEL= | cut -d= -f2)"
@@ -31,7 +28,7 @@ do_mount()
 
         udevadm info --query=property --name=${DEVICE} | grep ID_PATH | grep "platform-f0470300.ehci-usb-0:1.3:1.0-scsi-0:0:0:0" && LABEL="usb"
         udevadm info --query=property --name=${DEVICE} | grep ID_BUS | grep "ata" && LABEL="hdd"
-	udevadm info --query=property --name=${DEVICE} | grep DEVNAME | grep "mmcblk" && LABEL="sdcard"
+        udevadm info --query=property --name=${DEVICE} | grep DEVNAME | grep "mmcblk" && LABEL="sdcard"
 
        	MOUNT_POINT="/media/${LABEL}"
 
@@ -44,26 +41,26 @@ do_mount()
        	FILESYSTEM="auto"
 
         # File system type specific mount options
-        if [[ ${ID_FS_TYPE} == "vfat" ]]; then
-                OPTS+=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
+        if udevadm info --query=property --name=${DEVICE} | grep ID_FS_TYPE | grep -q "vfat"; then
+                OPTS_append=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
         fi
 
-	if [[ ${ID_FS_TYPE} == "exfat" ]]; then
-                OPTS+=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
+        if udevadm info --query=property --name=${DEVICE} | grep ID_FS_TYPE | grep -q "exfat"; then
+                OPTS_append=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
         fi
 
-        if [[ ${ID_FS_TYPE} == "ntfs" ]]; then
-                OPTS+=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
-               	FILESYSTEM="ntfs-3g"
+        if udevadm info --query=property --name=${DEVICE} | grep ID_FS_TYPE | grep -q "ntfs"; then
+                OPTS_append=",users,gid=100,umask=000,shortname=mixed,utf8=1,flush"
+                FILESYSTEM="ntfs-3g"
         fi
 
-	if ! /bin/mount -t ${FILESYSTEM} -o ${OPTS} ${DEVICE} ${MOUNT_POINT}; then
+        if ! /bin/mount -t ${FILESYSTEM} -o ${OPTS}${OPTS_append} ${DEVICE} ${MOUNT_POINT}; then
                 echo "Error mounting ${DEVICE} (status = $?)"
                 /bin/rmdir ${MOUNT_POINT}
                 exit 1
         fi
-        lsusb -t | grep "Mass Storage" && echo 1 > /proc/stb/lcd/symbol_usb
-	echo "**** Mounted ${DEVICE} at ${MOUNT_POINT} ****"
+        /usr/bin/which lsusb > /dev/null && lsusb -t | grep "Mass Storage" && echo 1 > /proc/stb/lcd/symbol_usb
+        echo "**** Mounted ${DEVICE} at ${MOUNT_POINT} ****"
 }
 
 do_unmount()
@@ -75,15 +72,15 @@ do_unmount()
                 echo "**** Unmounted ${DEVICE}"
         fi
 
-	for f in /media/* ; do
-                if [[ -n $(/usr/bin/find "$f" -maxdepth 0 -type d -empty) ]]; then
-                        if ! /bin/grep -q " $f " /etc/mtab; then
-                        echo "**** Removing mount point $f"
-                        /bin/rmdir "$f"
+        for f in /media/* ; do
+                if [[ -n $(/usr/bin/find "$f" -maxdepth 0 -type d -empty) ]] && [[ ! -h $f ]]; then
+                        if ! /bin/grep -q " $f " /proc/mounts && [[ -d $f ]]; then
+                                echo "**** Removing mount point $f"
+                                /bin/rmdir "$f"
                         fi
                 fi
         done
-	lsusb -t | grep "Mass Storage" || echo 0 > /proc/stb/lcd/symbol_usb
+        /usr/bin/which lsusb > /dev/null && lsusb -t | grep "Mass Storage" || echo 0 > /proc/stb/lcd/symbol_usb
 }
 
 case "${ACTION}" in
