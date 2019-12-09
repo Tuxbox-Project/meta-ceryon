@@ -74,7 +74,7 @@ do_unmount()
 
         for f in /media/* ; do
                 if [[ -n $(/usr/bin/find "$f" -maxdepth 0 -type d -empty) ]] && [[ ! -h $f ]]; then
-                        if ! /bin/grep -q " $f " /proc/mounts && [[ -d $f ]]; then
+                        if ! /bin/grep -q " $f " /proc/mounts; then
                                 echo "**** Removing mount point $f"
                                 /bin/rmdir "$f"
                         fi
