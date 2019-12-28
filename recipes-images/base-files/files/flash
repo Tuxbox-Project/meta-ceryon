@@ -21,10 +21,11 @@ res_setting="$(cat /etc/neutrino/config/neutrino.conf | grep osd_resolution | gr
 resolution="1920x1080"
 [ $res_setting = "0" ] && resolution="1280x720"
 
-pidof neutrino >> /dev/null && killall -9 neutrino
+pidof neutrino >> /dev/null && systemctl stop neutrino
+echo encoder > /proc/stb/avs/0/input
 
 clear
-convert -resize $resolution -gravity center -extent $resolution $picture_source/update.jpg bgra:/dev/fb0
+which convert && convert -resize $resolution -gravity center -extent $resolution $picture_source/update.jpg bgra:/dev/fb0
 
 exit_done() {
 	systemctl daemon-reload
@@ -49,20 +50,16 @@ If no second argument is given the image will be downloaded from
 $imagesource
 " && exit 0;
 
-if [[ $1 =~ ^[0-9]+$ ]]; then
-	if  [ $1 -lt 1 ] || [ $1 -gt 4 ]; then
-		printf '\n\033[31m%s\n' "Choose a valid partition [1-4]" ; exit 1;
-	elif [ $1 = 1 ]; then
-		part=1; append=""
-	elif [ $1 = 2 ]; then
-		part=2; append=$part
-	elif [ $1 = 3 ]; then
-		part=3; append=$part
-	elif [ $1 = 4 ]; then
-		part=4; append=$part
-	fi
-else
-	printf '\n\033[31m%s\n' "Please give the partition number [1-4] as first argument" ; exit 1;
+if  [ $1 -lt 1 ] || [ $1 -gt 4 ]; then
+	printf '\n\033[31m%s\n' "Choose a valid partition [1-4]" ; exit 1;
+elif [ $1 = 1 ]; then
+	part=1; append=""
+elif [ $1 = 2 ]; then
+	part=2; append=$part
+elif [ $1 = 3 ]; then
+	part=3; append=$part
+elif [ $1 = 4 ]; then
+	part=4; append=$part
 fi
 
 imageversion_local="$imagebase/imageversion_partition_$part"
