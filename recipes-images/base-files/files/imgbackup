@@ -2,7 +2,7 @@
 
 machine="hd51"
 hdd_mount="/media/usb"
-mountpoint -q /media/hdd && hdd_mount="/media/hdd"
+$(cat /proc/mounts | grep -q "/media/hdd") && hdd_mount="/media/hdd"
 servicedir="$hdd_mount/service"
 kernelname="kernel.bin"
 kernelbase="linuxkernel"
@@ -18,9 +18,7 @@ res_setting="$(cat /etc/neutrino/config/neutrino.conf | grep osd_resolution | gr
 resolution="1920x1080"
 [ $res_setting = "0" ] && resolution="1280x720"
 
-if ! [[ $1 =~ ^[1-4]+$ ]]; then
-	part_to_use=$root
-fi
+[ -z "$1" ] && part_to_use=$root
 
 exit_done() {
 	sleep 1
@@ -32,28 +30,24 @@ exit_done() {
 
 [ -z "$2" ] && [  -z "$1" ] && [ ! -d "$hdd_mount" ] && { printf '\n\033[31m%s\n' "Give the destination path an argument" && exit_done; }
 
-if [[ "$part_to_use" =~ ^[0-9]+$ ]]; then
-	if [ "$part_to_use" -lt 1 ] || [ $1 -gt 4 ]; then
-		{ printf '\n\033[31m%s\n' "Choose a valid partition [1-4]"; exit_done; }
-	elif [ "$part_to_use" = 1 ]; then
-		part=1; append=""
-	elif [ "$part_to_use" = 2 ]; then
-		part=2; append=$part
-	elif [ "$part_to_use" = 3 ]; then
-		part=3; append=$part
-	elif [ "$part_to_use" = 4 ]; then
-		part=4; append=$part
-	fi
+if [ "$part_to_use" = 1 ]; then
+	part=1; append=""
+elif [ "$part_to_use" = 2 ]; then
+	part=2; append=$part
+elif [ "$part_to_use" = 3 ]; then
+	part=3; append=$part
+elif [ "$part_to_use" = 4 ]; then
+	part=4; append=$part
 fi
 
-pidof neutrino >> /dev/null && killall -9 neutrino
+pidof neutrino >> /dev/null && systemctl stop neutrino 
+echo encoder > /proc/stb/avs/0/input
 clear
-convert -resize $resolution -gravity center -extent $resolution $picture_source/update.jpg bgra:/dev/fb0
+which convert >> /dev/null && convert -resize $resolution -gravity center -extent $resolution $picture_source/update.jpg bgra:/dev/fb0
 
-[ ! -z "$2" ] && mountpoint -q "$2" && space_available="$(df -Pk $2 | awk 'NR==2 {print $4}')"
-[ -z "$2"  ] && [ ! -z "$1" ] && mountpoint -q "$1" && ! [[ "$1" =~ ^[0-9]+$ ]] && space_available="$(df -Pk $1 | awk 'NR==2 {print $4}')"
-[ -z "$2"  ] && mountpoint -q "$hdd_mount" && [[ "$1" =~ ^[0-9]+$ ]] && space_available="$(df -Pk $hdd_mount | awk 'NR==2 {print $4}')"
-[ -z "$2"  ] && mountpoint -q "$hdd_mount" && [ -z "$1" ] && space_available="$(df -Pk $hdd_mount | awk 'NR==2 {print $4}')"
+$(cat /proc/mounts | grep -q "$rootsource$append") && space_available="$(df -Pk $rootsource$append | awk 'NR==2 {print $4}')"
+[ -z "$2"  ] && $(cat /proc/mounts | grep -q "$hdd_mount") && space_available="$(df -Pk $hdd_mount | awk 'NR==2 {print $4}')"
+[ -z "$2"  ] && $(cat /proc/mounts | grep -q "$hdd_mount") && [ -z "$1" ] && space_available="$(df -Pk $hdd_mount | awk 'NR==2 {print $4}')"
 if [ ! -z "$space_available" ] && [ "$space_available" -lt 1048576 ]; then
 	printf '\n\033[31m%s\n\t' "You need at least 1G of free space on your device"
 	exit_done;
@@ -61,8 +55,8 @@ fi
 
 printf '\n\n\n\033[1m%s\n\033[0m' "Creating backup of partition $part" && echo "Creating backup of partition $part" > "$dev_display"
 [ ! -z "$2" ] && destination="$2/backup/partition_$part/$machine"
-[ -z "$2"  ] && ! [[ "$1" =~ ^[0-9]+$ ]] && destination="$1/backup/partition_$part/$machine"
-[ -z "$2"  ] && [[ "$1" =~ ^[0-9]+$ ]] && destination="$servicedir/image/backup/partition_$part/$machine"
+[ -z "$2"  ] && destination="$1/backup/partition_$part/$machine"
+[ -z "$2"  ] && destination="$servicedir/image/backup/partition_$part/$machine"
 [ -z "$2"  ] && [ -z "$1" ] && destination="$servicedir/image/backup/partition_$part/$machine"
 
 [ -d "$destination" ] && rm -rf "$destination"
