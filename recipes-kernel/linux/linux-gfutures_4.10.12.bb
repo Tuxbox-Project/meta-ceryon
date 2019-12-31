@@ -35,6 +35,7 @@ SRC_URI_append = " \
 	file://blacklist_mmc0.patch \
 	file://export_pmpoweroffprepare.patch \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
+	file://4_10_dvbs2x.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
