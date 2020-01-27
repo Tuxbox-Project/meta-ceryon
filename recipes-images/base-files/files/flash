@@ -35,7 +35,7 @@ exit_done() {
 		exit 0;
 	elif [ "$root" = "$part" ];then
 		clear
-		cd /etc && git reset --hard >> /dev/null
+		which git >> /dev/null && cd /etc && git reset --hard >> /dev/null
 		echo "...Reboot"
 		echo "...Reboot" > "$dev_display" && systemctl reboot
 		exit 0;
