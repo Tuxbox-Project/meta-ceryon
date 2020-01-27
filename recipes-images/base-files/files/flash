@@ -34,11 +34,11 @@ exit_done() {
 		pidof neutrino >> /dev/null || systemctl start neutrino
 		exit 0;
 	elif [ "$root" = "$part" ];then
-                clear
-                cd /etc && git reset --hard >> /dev/null
-                echo "...Reboot"
-                echo "...Reboot" > "$dev_display" && systemctl reboot
-                exit 0;
+		clear
+		cd /etc && git reset --hard >> /dev/null
+		echo "...Reboot"
+		echo "...Reboot" > "$dev_display" && systemctl reboot
+		exit 0;
 	else
 		sleep 3
 		clear
