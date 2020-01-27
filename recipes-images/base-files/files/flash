@@ -28,7 +28,6 @@ clear
 which convert >> /dev/null && convert -resize "$resolution" -gravity center -extent "$resolution" "$picture_source"/update.jpg bgra:/dev/fb0
 
 exit_done() {
-	systemctl daemon-reload
 	if [[ "$no_update_available" = '1' ]];then
 		printf '\n\033[32m%s\n\033[0m' "No update available"
 		pidof neutrino >> /dev/null || systemctl start neutrino
