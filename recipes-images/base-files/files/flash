@@ -1,16 +1,12 @@
 #!/bin/sh
 #set -x
 
+# set basic parameters. TODO: make some parts configuarble e.g. url
 machine="hd51"
 url="https://update.tuxbox-neutrino.org/dist/$machine/3.0.3/images"
 image="neutrino-image_ofgwrite.zip"
 imagesource="$url/$image"
 imageversion_online="$url/imageversion"
-
-hdd_mount="/media/usb"
-$(cat /proc/mounts | grep -q "/media/hdd") && hdd_mount="/media/hdd"
-destination="/mnt/userdata"
-imagebase="$hdd_mount/service/image"
 picture_source="/usr/share/tuxbox/neutrino/icons"
 
 rootfs="rootfs.tar.bz2"
@@ -18,23 +14,60 @@ kernel_bin="kernel.bin"
 rootbase="linuxrootfs"
 kernelbase="linuxkernel"
 
+destination="/mnt/userdata"
+
 devbase="/dev/disk/by-partlabel"
 dev_display="/dev/dbox/oled0"
 
+# define work directory
+TMPDIR="/tmp/.`basename $0`"
+
+# ensure empty .flash directory, only for save 
+rm -rf "$TMPDIR"
+
+# set /tmp as default working directory
+hdd_mount="$TMPDIR"
+
+# set possible removable mounted drives
+DRIVES="/media/usb /media/hdd /media/Generic-"
+
+# check for mounted drives, if one of their available then use this as working directory
+for D in  $DRIVES ; do
+	DRIVE=`cat /proc/mounts | grep  "$D"`
+	if [ "$DRIVE" != "" ]; then
+		hdd_mount="$D"
+		break
+	fi
+done
+imagebase="$hdd_mount/service/image"
+
+# get current root partition
 root="$(sed -e 's/^.*rootsubdir=//' -e 's/ .*$//' < /proc/cmdline | grep -o '[1-4]')"
+
+# get current osd resolution settings from neutrino configuration
+# 0=1280x720
+# 1=1920x1080
 res_setting="$(cat /etc/neutrino/config/neutrino.conf | grep osd_resolution | grep -o '[0-1]')"
 resolution="1920x1080"
 [ "$res_setting" = '0' ] && resolution="1280x720"
 
+# get pid of neutrino and stop neutrino
 pidof neutrino >> /dev/null && systemctl stop neutrino
 
+# set output
 echo encoder > /proc/stb/avs/0/input
 
 clear
 
+# show download screen
 which convert >> /dev/null && convert -resize "$resolution" -gravity center -extent "$resolution" "$picture_source"/update_download.jpg bgra:/dev/fb0
 
 exit_done() {
+    # cleanup work directory
+    rm -rf "$TMPDIR"
+    STR_REBOOT="...Reboot"
+    STR_START_NEUTRINO="...Restart"
+
     if [[ "$no_update_available" = '1' ]];then
         printf '\n\033[32m%s\n\033[0m' "No update available"
         pidof neutrino >> /dev/null || systemctl start neutrino
@@ -43,11 +76,13 @@ exit_done() {
         clear
         which convert >> /dev/null && convert -resize "$resolution" -gravity center -extent "$resolution" "$picture_source"/update_done.jpg bgra:/dev/fb0
         which git >> /dev/null && cd /etc && git reset --hard >> /dev/null
-        echo "...Reboot"
-        echo "...Reboot" > "$dev_display" && systemctl reboot
+        echo "$STR_REBOOT"
+        echo "$STR_REBOOT" > "$dev_display" && systemctl reboot
         exit 0;
     else
         which convert >> /dev/null && convert -resize "$resolution" -gravity center -extent "$resolution" "$picture_source"/update_done.jpg bgra:/dev/fb0
+        echo "$STR_START_NEUTRINO"
+	echo "$STR_START_NEUTRINO" > "$dev_display"
         sleep 3
         clear
         pidof neutrino >> /dev/null || systemctl start neutrino
@@ -133,8 +168,9 @@ imageversion="$imagedir/imageversion"
 [ ! -d "$imagebase" ] && mkdir -p "$imagebase"
 
 space_available="$(df -Pk $imagebase | awk 'NR==2 {print $4}')"
-
-[ "$space_available" -lt 1048576 ] && printf '\n\033[31m%s\n' "You need at least 1G of free space on $hdd_mount" && exit_done
+SPACE_NEEDED="You need at least 250MB of free space on $hdd_mount"
+#[ "$space_available" -lt 514032 ] && printf '\n\033[31m%s\n' "$SPACE_NEEDED" && exit_done
+[ "$space_available" -lt 257016 ] && printf '\n\033[31m%s\n' "$SPACE_NEEDED" && exit_done
 
 if [ -z "$2" ]; then
     [ ! -f "$imageversion_local" ] && touch "$imageversion_local"
