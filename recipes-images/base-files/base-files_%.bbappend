@@ -5,7 +5,6 @@ SRC_URI_append += " \
 	file://firstboot.sh \
 	file://local.service \
 	file://local.sh \
-	file://flash \
 	file://imgbackup \
 	file://-.mount \
 	file://boot.mount \
@@ -19,7 +18,6 @@ do_install_append() {
 	install -d ${D}${bindir} ${D}${sbindir} ${D}${systemd_unitdir}/system/multi-user.target.wants
  	install -m 0755 ${WORKDIR}/firstboot.sh  ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/local.sh ${D}${bindir}
-	install -m 0755 ${WORKDIR}/flash ${D}${bindir}
 	install -m 0755 ${WORKDIR}/imgbackup ${D}${bindir}
         install -m 0755 ${WORKDIR}/mount.sh ${D}${bindir}
         install -m 0644 ${WORKDIR}/local.service ${D}${systemd_unitdir}/system
