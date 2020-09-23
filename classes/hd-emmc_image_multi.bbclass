@@ -83,7 +83,7 @@ IMAGE_CMD_hd-emmc_append = "\
     cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_flavour_${FLAVOUR}_flash.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_flash.zip ${IMAGENAME}_flash.zip; \
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_flash.zip ${IMAGE_NAME}_flash.zip; \
     rm -Rf ${IMAGEDIR}; \
     \
     cd ${DEPLOY_DIR_IMAGE}; \
@@ -92,7 +92,7 @@ IMAGE_CMD_hd-emmc_append = "\
     cp zImage ${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGENAME}_ofgwrite.zip; \
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_ofgwrite.zip ${IMAGE_NAME}_ofgwrite.zip; \
     rm -Rf ${IMAGEDIR}; \
     \
     mkdir -p ${IMAGEDIR}; \
@@ -100,7 +100,7 @@ IMAGE_CMD_hd-emmc_append = "\
     echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/imageversion; \
     zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGEDIR}/*; \
-    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGENAME}_usb.zip; \
+    ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGE_NAME}_usb.zip; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.tar; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \

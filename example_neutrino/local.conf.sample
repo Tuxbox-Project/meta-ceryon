@@ -44,8 +44,8 @@ MACHINE ?= "hd51"
 
 ### Image Settings
 
-# What image to build ?
-IMAGENAME = "neutrino-image"
+# Name of image, default is neutrino-image
+#IMAGE_BASENAME = "neutrino-image"
 
 # Could be set to small
 IMAGESIZE = "normal"
