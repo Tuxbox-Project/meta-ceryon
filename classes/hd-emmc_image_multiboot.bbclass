@@ -75,11 +75,11 @@ image_packaging() {
     rm -Rf ${MACHINE}
     
     cd ${DEPLOY_DIR_IMAGE}
-    mkdir -p ${MACHINE}
-    cp -f ${IMGDEPLOYDIR}/${IMAGE_NAME}.emmc.img ${MACHINE}/disk.img
-    echo ${IMAGE_NAME} > ${MACHINE}/imageversion
+    mkdir -p ${IMAGEDIR}
+    cp -f ${IMGDEPLOYDIR}/${IMAGE_NAME}.emmc.img ${IMAGEDIR}/disk.img
+    echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion
     echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/imageversion
-    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${MACHINE}/*
+    zip ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGEDIR}/*
     ln -sf ${IMAGE_NAME}_flavour_${FLAVOUR}_usb.zip ${IMAGENAME}_usb.zip
     rm -f ${DEPLOY_DIR_IMAGE}/*.tar
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4
