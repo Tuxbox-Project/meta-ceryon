@@ -86,10 +86,26 @@ IMAGE_LOCATION = "file:////media/sda1/service/image/flashimage.img"
 RELEASE_TEXT_LOCATION = "file:////media/sda1/service/image/beta.txt" 
 #RELEASE_TEXT_LOCATION_HOST = "/var/www/images/hd51/beta.txt"
 
-
-
-
-
-
-
-
+### Image version settings
+#
+# Name of the image, default = target name "neutrino-image"
+#IMAGE_BASENAME = "neutrino-image"
+IMAGE_BASENAME = "my-image"
+#
+# Use minimal image version name, extended parts of version string or DISTRO_CUSTOM_VERSION of image file name will be ignored. Default = "1"
+# default sample: neutrino-image-hd51-20200926170603_ofgwrite.zip
+# extended sample: neutrino-image_hd51-20200926170603_v3.1.1-139-56_ofgwrite.zip
+# custom sample: neutrino-image_hd51-20200926170603_v2020.38_ofgwrite.zip
+#INHIBIT_EXTENDED_IMAGE_VERSION = "1"
+INHIBIT_EXTENDED_IMAGE_VERSION = "0"
+#
+# User defined version of the image, default it is empty,
+# means ${DISTRO_VERSION_NUMBER} and extended version infos will be append
+#DISTRO_CUSTOM_VERSION = ""
+#DISTRO_CUSTOM_VERSION = "2020.38"
+# or include a file:
+# include local.conf.custom.version.inc
+#
+# Release state, default = "0" (release), "1" (beta), 2 " (nightly)
+#RELEASE_STATE = "0"
+RELEASE_STATE = "1"
