@@ -36,6 +36,7 @@ SRC_URI_append = " \
 	file://export_pmpoweroffprepare.patch \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
 	file://4_10_dvbs2x.patch \
+	file://0001-scripts-dtc-Remove-redundant-YYLOC-global-declaration.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
