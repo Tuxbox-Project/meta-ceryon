@@ -11,3 +11,5 @@ EXTRA_OECMAKE += " \
     -DWITH_FFMPEG=stb \
 "
 
+do_package_qa = ""
+
