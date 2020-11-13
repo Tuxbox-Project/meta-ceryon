@@ -1,6 +1,7 @@
+From 425c69924cee8ee2254aa1c62c6daa4df1512792 Mon Sep 17 00:00:00 2001
 From: Dirk Mueller <dmueller@suse.com>
-
-commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
+Date: Fri, 13 Nov 2020 15:26:03 +0000
+Subject: [PATCH] commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
 
 gcc 10 will default to -fno-common, which causes this error at link
 time:
@@ -32,9 +33,12 @@ Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/dtc/dtc-lexer.l |    1 -
- 1 file changed, 1 deletion(-)
+ scripts/dtc/dtc-lexer.l             | 1 -
+ scripts/dtc/dtc-lexer.lex.c_shipped | 1 -
+ 2 files changed, 2 deletions(-)
 
+diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
+index 790fbf6c..e4e0f6a8 100644
 --- a/scripts/dtc/dtc-lexer.l
 +++ b/scripts/dtc/dtc-lexer.l
 @@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
@@ -45,10 +49,11 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  extern bool treesource_error;
  
  /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-
+diff --git a/scripts/dtc/dtc-lexer.lex.c_shipped b/scripts/dtc/dtc-lexer.lex.c_shipped
+index ba525c2f..750f7a4e 100644
 --- a/scripts/dtc/dtc-lexer.lex.c_shipped
 +++ b/scripts/dtc/dtc-lexer.lex.c_shipped
-@@ -637,7 +637,6 @@
+@@ -637,7 +637,6 @@ char *yytext;
  #include "srcpos.h"
  #include "dtc-parser.tab.h"
  

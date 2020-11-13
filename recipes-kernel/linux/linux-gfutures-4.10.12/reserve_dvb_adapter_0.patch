@@ -1,8 +1,17 @@
+From 6b8f9cf9c4ff722aa69e96dd18dad4313a5a4e18 Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Sun, 24 Sep 2017 12:07:04 +0200
+Subject: [PATCH] initial commit
+
+---
+ drivers/media/dvb-core/dvbdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 560450a..eb1a212 100644
+index 38c84466..cd698372 100644
 --- a/drivers/media/dvb-core/dvbdev.c
 +++ b/drivers/media/dvb-core/dvbdev.c
-@@ -768,7 +768,7 @@ static int dvbdev_check_free_adapter_num(int num)
+@@ -789,7 +789,7 @@ static int dvbdev_check_free_adapter_num(int num)
  
  static int dvbdev_get_free_adapter_num (void)
  {

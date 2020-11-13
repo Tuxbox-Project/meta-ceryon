@@ -1,9 +1,14 @@
+From 015a1fd36cd0f8fb6ad1ca31c9603ae679ad19a2 Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Sun, 24 Sep 2017 12:07:04 +0200
+Subject: [PATCH] initial commit
+
 ---
  drivers/mmc/host/sdhci-brcmstb.c | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-index 942b42b..b678310 100644
+index 942b42b5..b6783109 100644
 --- a/drivers/mmc/host/sdhci-brcmstb.c
 +++ b/drivers/mmc/host/sdhci-brcmstb.c
 @@ -71,6 +71,10 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
@@ -17,5 +22,3 @@ index 942b42b..b678310 100644
  	clk = devm_clk_get(&pdev->dev, NULL);
  	if (IS_ERR(clk)) {
  		dev_err(&pdev->dev, "Clock not found in Device Tree\n");
--- 
-2.7.4

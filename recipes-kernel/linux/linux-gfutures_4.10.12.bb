@@ -37,6 +37,9 @@ SRC_URI_append = " \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
 	file://4_10_dvbs2x.patch \
 	file://0001-scripts-dtc-Remove-redundant-YYLOC-global-declaration.patch \
+	file://TBS-fixes-for-4.10-kernel.patch \
+	file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+	file://0001-TBS-fixes-for-4.6-kernel.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

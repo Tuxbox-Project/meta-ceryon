@@ -1,8 +1,18 @@
+From 530ac8370599f0affdbe72939b9ec83ba4e0f294 Mon Sep 17 00:00:00 2001
+From: MarkusVolk <f_l_k@t-online.de>
+Date: Tue, 31 Dec 2019 18:06:56 +0100
+Subject: [PATCH] linux: add dvbs2x patch
+
+---
+ drivers/media/dvb-core/dvb_frontend.c |  5 +++++
+ include/uapi/linux/dvb/frontend.h     | 20 ++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
 diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 3ab8747..78c1b24 100644
+index db74cb74..c5da7047 100644
 --- a/drivers/media/dvb-core/dvb_frontend.c
 +++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -202,6 +202,7 @@
+@@ -202,6 +202,7 @@ static enum dvbv3_emulation_type dvbv3_type(u32 delivery_system)
  		return DVBV3_QAM;
  	case SYS_DVBS:
  	case SYS_DVBS2:
@@ -10,7 +20,7 @@ index 3ab8747..78c1b24 100644
  	case SYS_TURBO:
  	case SYS_ISDBS:
  	case SYS_DSS:
-@@ -907,6 +908,7 @@
+@@ -907,6 +908,7 @@ static int dvb_frontend_check_parameters(struct dvb_frontend *fe)
  	switch (c->delivery_system) {
  	case SYS_DVBS:
  	case SYS_DVBS2:
@@ -18,7 +28,7 @@ index 3ab8747..78c1b24 100644
  	case SYS_TURBO:
  	case SYS_DVBC_ANNEX_A:
  	case SYS_DVBC_ANNEX_C:
-@@ -973,6 +975,7 @@
+@@ -973,6 +975,7 @@ static int dvb_frontend_clear_cache(struct dvb_frontend *fe)
  	switch (c->delivery_system) {
  	case SYS_DVBS:
  	case SYS_DVBS2:
@@ -26,7 +36,7 @@ index 3ab8747..78c1b24 100644
  	case SYS_TURBO:
  		c->modulation = QPSK;   /* implied for DVB-S in legacy API */
  		c->rolloff = ROLLOFF_35;/* implied for DVB-S */
-@@ -2091,6 +2094,7 @@
+@@ -2091,6 +2094,7 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
  		rolloff = 135;
  		break;
  	case SYS_DVBS2:
@@ -34,7 +44,7 @@ index 3ab8747..78c1b24 100644
  		switch (c->rolloff) {
  		case ROLLOFF_20:
  			rolloff = 120;
-@@ -2131,6 +2135,7 @@
+@@ -2131,6 +2135,7 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
  		switch (c->delivery_system) {
  		case SYS_DVBS:
  		case SYS_DVBS2:
@@ -43,10 +53,10 @@ index 3ab8747..78c1b24 100644
  		case SYS_TURBO:
  		case SYS_DVBC_ANNEX_A:
 diff --git a/include/uapi/linux/dvb/frontend.h b/include/uapi/linux/dvb/frontend.h
-index c56d77c..5aebaa9 100644
+index 00a20cd2..14ea4b49 100644
 --- a/include/uapi/linux/dvb/frontend.h
 +++ b/include/uapi/linux/dvb/frontend.h
-@@ -156,6 +156,24 @@
+@@ -156,6 +156,24 @@ enum fe_code_rate {
  	FEC_3_5,
  	FEC_9_10,
  	FEC_2_5,
@@ -69,21 +79,21 @@ index c56d77c..5aebaa9 100644
 +	FEC_5_9_L=29,
 +	FEC_26_45_L=30
  };
-
+ 
  enum fe_modulation {
-@@ -173,6 +191,7 @@
+@@ -173,6 +191,7 @@ enum fe_modulation {
  	APSK_32,
  	DQPSK,
  	QAM_4_NR,
 +	APSK_8,
  };
-
+ 
  enum fe_transmit_mode {
-@@ -342,6 +361,7 @@
+@@ -342,6 +361,7 @@ enum fe_delivery_system {
  	SYS_DVBT2,
  	SYS_TURBO,
  	SYS_DVBC_ANNEX_C,
 +	SYS_DVBS2X = 21,
  };
-
+ 
  /* backward compatibility */
