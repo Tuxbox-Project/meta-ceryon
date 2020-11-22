@@ -40,6 +40,7 @@ SRC_URI_append = " \
 	file://TBS-fixes-for-4.10-kernel.patch \
 	file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
 	file://0001-TBS-fixes-for-4.6-kernel.patch \
+	file://0001-backport-hid-steam-driver.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
