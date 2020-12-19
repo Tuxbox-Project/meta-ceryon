@@ -75,7 +75,6 @@ image_packaging() {
 	cp zImage ${IMAGEDIR}/${KERNEL_FILE}
 	echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion
 	zip ${IMAGE_FILE_NAME_PREFIX}_ofgwrite.zip ${IMAGEDIR}/*
-	ln -sf ${IMAGE_FILE_NAME_PREFIX}_ofgwrite.zip ${IMAGE_FILE_NAME_LATEST_PREFIX}_ofgwrite.zip
 	rm -Rf ${IMAGEDIR}
 
 	cd ${DEPLOY_DIR_IMAGE}
@@ -85,7 +84,10 @@ image_packaging() {
 	echo ${IMAGE_NAME} > ${IMAGEDIR}/imageversion
 	echo ${IMAGE_NAME} > ${DEPLOY_DIR_IMAGE}/imageversion
 	zip ${IMAGE_FILE_NAME_PREFIX}_usb.zip ${IMAGEDIR}/*
+	rm -f ${IMAGE_FILE_NAME_LATEST_PREFIX}_usb.zip
+	rm -f ${IMAGE_FILE_NAME_LATEST_PREFIX}_ofgwrite.zip
 	ln -sf ${IMAGE_FILE_NAME_PREFIX}_usb.zip ${IMAGE_FILE_NAME_LATEST_PREFIX}_usb.zip
+	ln -sf ${IMAGE_FILE_NAME_PREFIX}_ofgwrite.zip ${IMAGE_FILE_NAME_LATEST_PREFIX}_ofgwrite.zip
 
 	for f in  "tar ext4 manifest json img" ; do
 		rm -f ${DEPLOY_DIR_IMAGE}/*.$f
