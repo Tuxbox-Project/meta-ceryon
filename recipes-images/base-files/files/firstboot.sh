@@ -39,6 +39,12 @@ if [ -b /dev/disk/by-partlabel/userdata ]; then
 	fi
 fi
 
+echo "change hostname in /etc/hosts & /etc/hostname"
+OLDHOST=`hostname`
+NEWHOST=$OLDHOST-`echo $(($RANDOM % 100+1000))`
+sed -i "s/$OLDHOST/$NEWHOST/g" /etc/hosts
+sed -i "s/$OLDHOST/$NEWHOST/g" /etc/hostname
+
 echo "first boot script work done"
 #job done, remove it from systemd services
 systemctl disable firstboot.service
