@@ -38,6 +38,8 @@ IMAGE_CMD_hd-emmc () {
     dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 seek=${ROOTFS_SIZE} count=$COUNT bs=1024
     mkfs.ext4 -F -i 4096 ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 -d ${WORKDIR}/rootfs
     ln -sf ${IMAGE_NAME}.rootfs.ext4 ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.rootfs.ext4
+    # Error codes 0-3 indicate successfull operation of fsck (no errors or errors fixed)
+    fsck.ext4 -pvfD ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.rootfs.ext4 || [ $? -le 3 ]
     dd if=/dev/zero of=${EMMC_IMAGE} bs=${BLOCK_SIZE} count=0 seek=$(expr ${EMMC_IMAGE_SIZE} \* ${BLOCK_SECTOR})
     parted -s ${EMMC_IMAGE} mklabel gpt
     parted -s ${EMMC_IMAGE} unit KiB mkpart boot fat16 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${IMAGE_ROOTFS_ALIGNMENT} \+ ${BOOT_PARTITION_SIZE})
