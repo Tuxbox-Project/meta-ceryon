@@ -7,7 +7,7 @@ COMPATIBLE_MACHINE = "hd+|vs+|bre2ze4k"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".3"
+MACHINE_KERNEL_PR_append = ".4"
 
 PROVIDES  = "virtual/kernel"
 RPROVIDES_${PN} = "virtual/kernel"
@@ -31,17 +31,25 @@ SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}-${ARCH}.tar.gz;name=
 
 SRC_URI_append = " \
 	file://findkerneldevice.sh \
-	file://reserve_dvb_adapter_0.patch \
-	file://blacklist_mmc0.patch \
-	file://export_pmpoweroffprepare.patch \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
-	file://4_10_dvbs2x.patch \
-	file://0001-scripts-dtc-Remove-redundant-YYLOC-global-declaration.patch \
-	file://TBS-fixes-for-4.10-kernel.patch \
-	file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
-	file://0001-TBS-fixes-for-4.6-kernel.patch \
-	file://0001-backport-hid-steam-driver.patch \
-	"
+\
+	file://0001-export_pmpoweroffprepare.patch \
+	file://0002-TBS-fixes-for-4.10-kernel.patch \
+	file://0003-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+	file://0004-TBS-fixes-for-4.6-kernel.patch \
+	file://0005-STV-Add-PLS-support.patch \
+	file://0006-STV-Add-SNR-Signal-report-parameters.patch \
+	file://0007-blindscan2.patch \
+	file://0008-stv090x-optimized-TS-sync-control.patch \
+	file://0009-add-more-devices-rtl8xxxu.patch \
+	file://0010-bitsperlong.patch \
+	file://0011-blacklist_mmc0.patch \
+	file://0012-dvbs2x.patch \
+	file://0013-reserve_dvb_adapter_0.patch \
+	file://0014-t230c2.patch \
+	file://0015-backport-hid-steam-driver.patch \
+	file://0016-scripts-dtc-Remove-redundant-YYLOC-global-declaration.patch \
+"
 
 S = "${WORKDIR}/linux-${PV}"
 
