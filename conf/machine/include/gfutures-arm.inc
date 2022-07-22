@@ -51,4 +51,4 @@ IMAGE_CMD_hdemmc_append = "\
     "
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
-#require conf/machine/include/gfutures-oem.inc
+require conf/machine/include/gfutures-oem.inc
