@@ -3,7 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "4.10.12"
-
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${KERNEL_RELEASE}/${MACHINE}:"
 inherit kernel machine_kernel_pr
 
 SRC_URI[mips.md5sum] = "3c42df14db9d12041802f4c8fec88e17"
