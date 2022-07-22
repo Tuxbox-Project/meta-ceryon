@@ -43,7 +43,6 @@ IMAGE_CMD_hdemmc_append = "\
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_recovery_emmc.zip ${IMAGEDIR}/disk.img ${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/imageversion ${IMAGEDIR}/kernel.bin ${IMAGEDIR}/rootfs.tar.bz2; \
-    ln -sf ${IMAGE_NAME}_usb.zip ${IMAGE_NAME}_ofgwrite.zip; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.ext4; \
