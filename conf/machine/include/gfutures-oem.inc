@@ -18,8 +18,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant66se', 'HD66SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax61', 'HD61' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'HD60' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE 4K' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'axultra', 'HD51 ultra' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE-4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axultra', 'HD51-ultra' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'VS1000' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'VS1500' , '', d)}\
 "
@@ -36,16 +36,16 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant66se', 'Mut@nt' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'ax61', 'AX 4KBOX' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'ax51', 'AX 4K' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'ax60', 'AX 4KBOX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'AX-4KBOX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax51', 'AX-4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax60', 'AX-4KBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'WWIO' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'axultra', 'AX 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axultra', 'AX-4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'Vimastec' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'Vimastec' , '', d)}\
 "
 
-IMAGEDIR ?= "\
+IMAGEDIR = "\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'hd1265' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'hd1500' , '', d)}\
