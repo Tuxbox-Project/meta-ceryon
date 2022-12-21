@@ -1,8 +1,11 @@
-From b8fabb60727caad3300355cd49ba5f2c0c84c1d3 Mon Sep 17 00:00:00 2001
+From e76cebe33aafa949811c32c0d0f6ba7408d131ba Mon Sep 17 00:00:00 2001
 From: Nicker <nickersk@gmail.com>
 Date: Thu, 26 Jul 2018 08:50:19 +0200
 Subject: [PATCH] cp1emu do not use bools for arithmetic
 
+---
+ arch/mips/math-emu/cp1emu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/mips/math-emu/cp1emu.c b/arch/mips/math-emu/cp1emu.c
 index a298ac93..1177d53a 100644
@@ -23,6 +26,3 @@ index a298ac93..1177d53a 100644
  	set_fpr64(&ctx->fpr[fpr], 0, di);				\
  	for (i = 1; i < ARRAY_SIZE(ctx->fpr[x].val64); i++)		\
  		set_fpr64(&ctx->fpr[fpr], i, 0);			\
--- 
-2.17.1
-

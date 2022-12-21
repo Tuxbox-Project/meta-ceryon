@@ -1,8 +1,17 @@
+From 837291945632e348655f1a585630059fbebd457c Mon Sep 17 00:00:00 2001
+From: Thilo Graf <dbt@novatux.de>
+Date: Tue, 8 Nov 2022 20:33:33 +0100
+Subject: [PATCH] add support for ceryon
+
+---
+ drivers/media/dvb-core/dvbdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 560450a..eb1a212 100644
+index 38c84466..cd698372 100644
 --- a/drivers/media/dvb-core/dvbdev.c
 +++ b/drivers/media/dvb-core/dvbdev.c
-@@ -768,7 +768,7 @@ static int dvbdev_check_free_adapter_num(int num)
+@@ -789,7 +789,7 @@ static int dvbdev_check_free_adapter_num(int num)
  
  static int dvbdev_get_free_adapter_num (void)
  {

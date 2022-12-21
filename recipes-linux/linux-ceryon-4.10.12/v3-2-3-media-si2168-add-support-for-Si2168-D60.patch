@@ -1,5 +1,15 @@
+From 24a1a2c4bf7967a0348e4229031a22df4411d6fe Mon Sep 17 00:00:00 2001
+From: Thilo Graf <dbt@novatux.de>
+Date: Tue, 8 Nov 2022 20:33:33 +0100
+Subject: [PATCH] add support for ceryon
+
+---
+ drivers/media/dvb-frontends/si2168.c      | 4 ++++
+ drivers/media/dvb-frontends/si2168_priv.h | 2 ++
+ 2 files changed, 6 insertions(+)
+
 diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
-index 20b4a659e2e4..28f3bbe0af25 100644
+index 20b4a659..28f3bbe0 100644
 --- a/drivers/media/dvb-frontends/si2168.c
 +++ b/drivers/media/dvb-frontends/si2168.c
 @@ -674,6 +674,9 @@ static int si2168_probe(struct i2c_client *client,
@@ -18,7 +28,7 @@ index 20b4a659e2e4..28f3bbe0af25 100644
  MODULE_FIRMWARE(SI2168_B40_FIRMWARE);
 +MODULE_FIRMWARE(SI2168_D60_FIRMWARE);
 diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
-index 7843ccb448a0..4baa95b7d648 100644
+index 7843ccb4..4baa95b7 100644
 --- a/drivers/media/dvb-frontends/si2168_priv.h
 +++ b/drivers/media/dvb-frontends/si2168_priv.h
 @@ -25,6 +25,7 @@

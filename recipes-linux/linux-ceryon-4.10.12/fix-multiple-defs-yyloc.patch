@@ -1,3 +1,14 @@
+From 61ec8af267963db332e2af059dba319a76f13c57 Mon Sep 17 00:00:00 2001
+From: Thilo Graf <dbt@novatux.de>
+Date: Tue, 8 Nov 2022 20:33:33 +0100
+Subject: [PATCH] add support for ceryon
+
+---
+ scripts/dtc/dtc-parser.tab.c_shipped | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/dtc/dtc-parser.tab.c_shipped b/scripts/dtc/dtc-parser.tab.c_shipped
+index 31cec50a..da139e3f 100644
 --- a/scripts/dtc/dtc-parser.tab.c_shipped
 +++ b/scripts/dtc/dtc-parser.tab.c_shipped
 @@ -1196,7 +1196,7 @@ int yychar;

@@ -1,3 +1,14 @@
+From f2239728379f2f9efa5a203919b0c979e327dfdf Mon Sep 17 00:00:00 2001
+From: Thilo Graf <dbt@novatux.de>
+Date: Tue, 8 Nov 2022 20:33:33 +0100
+Subject: [PATCH] add support for ceryon
+
+---
+ drivers/media/dvb-core/dvb-usb-ids.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
+index f78f333e..155e3492 100644
 --- a/drivers/media/dvb-core/dvb-usb-ids.h
 +++ b/drivers/media/dvb-core/dvb-usb-ids.h
 @@ -73,12 +73,14 @@

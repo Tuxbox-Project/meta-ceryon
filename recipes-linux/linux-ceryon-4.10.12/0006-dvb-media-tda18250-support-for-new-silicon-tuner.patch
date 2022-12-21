@@ -1,7 +1,7 @@
-From f724afe58782ccbcb2f0aaea9cca204b35859904 Mon Sep 17 00:00:00 2001
+From b3fbde006808539b032dfda9eda3cd37c33167b4 Mon Sep 17 00:00:00 2001
 From: Olli Salonen <olli.salonen@iki.fi>
 Date: Thu, 23 Nov 2017 03:24:45 -0500
-Subject: [PATCH 2/4] media: tda18250: support for new silicon tuner
+Subject: [PATCH] media: tda18250: support for new silicon tuner
 
 NXP TDA18250 silicon tuner driver.
 
@@ -9,6 +9,7 @@ Version 4 includes some checkpatch fixes.
 
 Signed-off-by: Olli Salonen <olli.salonen@iki.fi>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+
 ---
  MAINTAINERS                          |   9 +
  drivers/media/tuners/Kconfig         |   7 +
@@ -22,10 +23,10 @@ Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
  create mode 100644 drivers/media/tuners/tda18250_priv.h
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 4764180d..9a0a8f15 100644
+index 527d1375..62d942a2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -10450,6 +10450,15 @@ T:	git git://linuxtv.org/anttip/media_tree.git
+@@ -11995,6 +11995,15 @@ T:	git git://linuxtv.org/anttip/media_tree.git
  S:	Maintained
  F:	drivers/media/tuners/tda18218*
  
@@ -1187,6 +1188,3 @@ index 00000000..4a6f8017
 +};
 +
 +#endif
--- 
-2.17.1
-

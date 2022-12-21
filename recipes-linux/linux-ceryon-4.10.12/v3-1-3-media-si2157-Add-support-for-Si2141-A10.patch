@@ -1,5 +1,15 @@
+From 36d3945a12fb7b82d50eb2f87c0147b678bba6ce Mon Sep 17 00:00:00 2001
+From: Thilo Graf <dbt@novatux.de>
+Date: Tue, 8 Nov 2022 20:33:33 +0100
+Subject: [PATCH] add support for ceryon
+
+---
+ drivers/media/tuners/si2157.c      | 23 +++++++++++++++++++++--
+ drivers/media/tuners/si2157_priv.h |  2 ++
+ 2 files changed, 23 insertions(+), 2 deletions(-)
+
 diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index 57b250847cd3..e35b1faf0ddc 100644
+index 57b25084..e35b1faf 100644
 --- a/drivers/media/tuners/si2157.c
 +++ b/drivers/media/tuners/si2157.c
 @@ -106,6 +106,9 @@ static int si2157_init(struct dvb_frontend *fe)
@@ -81,7 +91,7 @@ index 57b250847cd3..e35b1faf0ddc 100644
  MODULE_FIRMWARE(SI2158_A20_FIRMWARE);
 +MODULE_FIRMWARE(SI2141_A10_FIRMWARE);
 diff --git a/drivers/media/tuners/si2157_priv.h b/drivers/media/tuners/si2157_priv.h
-index d6b2c7b44053..e6436f74abaa 100644
+index d6b2c7b4..e6436f74 100644
 --- a/drivers/media/tuners/si2157_priv.h
 +++ b/drivers/media/tuners/si2157_priv.h
 @@ -42,6 +42,7 @@ struct si2157_dev {

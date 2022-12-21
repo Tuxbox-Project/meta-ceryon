@@ -1,3 +1,14 @@
+From 5719d291a3a9a96006e0ac9461e5257d85c8ef67 Mon Sep 17 00:00:00 2001
+From: Thilo Graf <dbt@novatux.de>
+Date: Tue, 8 Nov 2022 20:33:33 +0100
+Subject: [PATCH] add support for ceryon
+
+---
+ drivers/media/usb/dvb-usb-v2/dvbsky.c | 187 +++++++++++++++++++++++++-
+ 1 file changed, 182 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+index 0636eac3..79ca6b9a 100644
 --- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
 +++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
 @@ -12,10 +12,6 @@
@@ -9,12 +20,12 @@
 - *    along with this program; if not, write to the Free Software
 - *    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
   */
-
+ 
  #include "dvb_usb.h"
-@@ -665,6 +661,128 @@
+@@ -665,6 +661,128 @@ static int dvbsky_t330_attach(struct dvb_usb_adapter *adap)
  	return ret;
  }
-
+ 
 +static int dvbsky_t230_attach(struct dvb_usb_adapter *adap)
 +{
 +	struct dvbsky_state *state = adap_to_priv(adap);
@@ -140,10 +151,10 @@
  static int dvbsky_identify_state(struct dvb_usb_device *d, const char **name)
  {
  	dvbsky_gpio_ctrl(d, 0x04, 1);
-@@ -830,6 +948,59 @@
+@@ -830,6 +948,59 @@ static struct dvb_usb_device_properties dvbsky_t330_props = {
  	}
  };
-
+ 
 +static struct dvb_usb_device_properties mygica_t230_props = {
 +	.driver_name = KBUILD_MODNAME,
 +	.owner = THIS_MODULE,
@@ -200,7 +211,7 @@
  static const struct usb_device_id dvbsky_id_table[] = {
  	{ DVB_USB_DEVICE(0x0572, 0x6831,
  		&dvbsky_s960_props, "DVBSky S960/S860", RC_MAP_DVBSKY) },
-@@ -862,7 +1033,13 @@
+@@ -862,7 +1033,13 @@ static const struct usb_device_id dvbsky_id_table[] = {
  	{ DVB_USB_DEVICE(USB_VID_TERRATEC, USB_PID_TERRATEC_CINERGY_S2_R4,
  		&dvbsky_s960_props, "Terratec Cinergy S2 Rev.4",
  		RC_MAP_DVBSKY) },
@@ -214,3 +225,4 @@
 + 	{ }
  };
  MODULE_DEVICE_TABLE(usb, dvbsky_id_table);
+ 
