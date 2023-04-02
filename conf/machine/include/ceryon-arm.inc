@@ -38,7 +38,8 @@ IMAGE_CMD:ceryonemmc:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-require ../openembedded-core/meta/conf/machine/include/arm/armv7a/tune-cortexa15.inc
+require conf/machine/include/arm/armv7a/tune-cortexa15.inc
+#require ${COREBASE}/openembedded-core/meta/conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/ceryon-oem.inc
 
 
